@@ -77,19 +77,29 @@ docker-compose --version
 
 ### Клонирование репозитория:
 ```bash
-git clone <URL_ВАШЕГО_РЕПОЗИТОРИЯ> /var/www/bts-tickets
+git clone <https://github.com/playerokjamal228-del/bts-tickets> /var/www/bts-tickets
 cd /var/www/bts-tickets
 ```
 
-### Создание файла окружения:
-Скопируйте пример файла `.env`:
-```bash
-cp .env.example .env
-```
-Теперь отредактируем его:
-```bash
-nano .env
-```
+### Создание файла настроек (.env):
+Файл `.env` — это "пульт управления" вашим сайтом. В нем хранятся секретные ключи, пароли и настройки. 
+В репозитории есть файл-шаблон `.env.example`. Мы копируем его в новый файл `.env`, который и будем редактировать.
+
+1. **Создайте файл на основе шаблона:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Откройте его для редактирования:**
+   ```bash
+   nano .env
+   ```
+
+3. **Что там нужно изменить:**
+   Внутри вы увидите строки вроде `TELEGRAM_BOT_TOKEN="your-token"`. Вам нужно заменить текст в кавычках на ваши реальные данные (как их получить — расписано в следующем пункте).
+
+> [!TIP]
+> Мы делаем копию, потому что `.env.example` виден всем в интернете (в GitHub), а ваш личный файл `.env` с настоящими паролями останется только на сервере — это стандарт безопасности.
 
 ---
 
@@ -119,44 +129,21 @@ TELEGRAM_CHAT_ID="ваш_id"
 *Чтобы сохранить изменения в `nano`, нажмите `Ctrl+O`, `Enter`, затем `Ctrl+X`.*
 
 ---
-
 ## 7. Запуск проекта
 
-Создайте файл `docker-compose.yml` в корне проекта (если его там еще нет):
-```yaml
-version: '3.8'
-
-services:
-  db:
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: bts_tickets
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  app:
-    build: .
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: postgresql://user:password@db:5432/bts_tickets
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
-    depends_on:
-      - db
-
-volumes:
-  postgres_data:
-```
+Файл `docker-compose.yml` уже находится в корне проекта. Он настроен на запуск самого приложения и базы данных PostgreSQL.
 
 **Запустите сборку и старт:**
 ```bash
 docker-compose up -d --build
 ```
+
+### Наполнение базы данных (Seed):
+Чтобы на сайте появились билеты и мероприятия (как в нашей текущей версии), нужно запустить специальный скрипт наполнения:
+```bash
+docker-compose exec app npx prisma db seed
+```
+*Эта команда заполнит пустую базу данных начальными данными из файла `prisma/seed.ts`.*
 
 ---
 
