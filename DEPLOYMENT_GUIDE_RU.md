@@ -141,12 +141,12 @@ docker-compose up -d --build
 ### Настройка базы данных (обязательно):
 1.  **Создание таблиц:**
     ```bash
-    docker-compose exec app npx prisma@5.10.0 db push
+    docker-compose exec app npm run db:push
     ```
 
 2.  **Наполнение данными (Seed):**
     ```bash
-    docker-compose exec app npx prisma@5.10.0 db seed
+    docker-compose exec app npm run db:seed
     ```
 
 ---
