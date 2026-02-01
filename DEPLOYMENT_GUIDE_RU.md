@@ -138,12 +138,16 @@ TELEGRAM_CHAT_ID="ваш_id"
 docker-compose up -d --build
 ```
 
-### Наполнение базы данных (Seed):
-Чтобы на сайте появились билеты и мероприятия (как в нашей текущей версии), нужно запустить специальный скрипт наполнения:
-```bash
-docker-compose exec app npx prisma db seed
-```
-*Эта команда заполнит пустую базу данных начальными данными из файла `prisma/seed.ts`.*
+### Настройка базы данных (обязательно):
+1.  **Создание таблиц:**
+    ```bash
+    docker-compose exec app npx prisma db push
+    ```
+
+2.  **Наполнение данными (Seed):**
+    ```bash
+    docker-compose exec app npx prisma db seed
+    ```
 
 ---
 
