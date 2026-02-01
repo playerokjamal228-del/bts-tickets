@@ -575,9 +575,9 @@ export default function CheckoutPage() {
                         </Card>
                     </div>
                 </div>
-            </div >
+            </div>
             {/* Footer - outside padding container */}
-            < Footer />
+            <Footer />
         </>
     );
 }

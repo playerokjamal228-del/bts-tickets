@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader2, MessageCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-export default function SuccessPage() {
+// Inner component that uses useSearchParams
+function SuccessContent() {
     const searchParams = useSearchParams();
     const method = searchParams.get("method") || "card";
 
@@ -99,7 +100,7 @@ export default function SuccessPage() {
 
                 <div className="mt-8 bg-white/5 p-4 rounded-lg border border-white/10 max-w-sm">
                     <p className="text-xs text-gray-400">
-                        Способ оплаты: <span className="text-white font-medium">{method === "iban" ? "Банковский перевод (IBAN)" : "Банковская карта"}</span>
+                        Способ оплаты: <span className="text-white font-medium">{method === "iban" ? "Банковский перевод (IBAN)" : method === "paypal" ? "PayPal" : "Банковская карта"}</span>
                     </p>
                 </div>
             </div>
@@ -163,5 +164,24 @@ export default function SuccessPage() {
                 </Button>
             </Link>
         </div>
+    );
+}
+
+// Loading fallback
+function LoadingFallback() {
+    return (
+        <div className="min-h-screen bg-secondary text-white flex flex-col items-center justify-center p-4">
+            <Loader2 className="w-12 h-12 text-purple-400 animate-spin" />
+            <p className="text-gray-400 mt-4">Загрузка...</p>
+        </div>
+    );
+}
+
+// Main page with Suspense boundary
+export default function SuccessPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <SuccessContent />
+        </Suspense>
     );
 }
