@@ -101,20 +101,6 @@ export function EventBooking({ event }: EventBookingProps) {
         return result;
     }, [event.offers, selectedSector, qty, category, sort, minPrice, maxPrice]);
 
-    const CategoryPill = ({ id, label, icon }: { id: CategoryOption; label: string; icon?: React.ReactNode }) => (
-        <button
-            onClick={() => setCategory(id)}
-            className={cn(
-                "px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1",
-                category === id
-                    ? "bg-white text-black"
-                    : "bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/30"
-            )}
-        >
-            {icon}
-            {label}
-        </button>
-    );
 
     return (
         <div className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-secondary text-white overflow-hidden">
@@ -206,11 +192,11 @@ export function EventBooking({ event }: EventBookingProps) {
 
                         {/* Level 2: Pills - wrap instead of scroll */}
                         <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                            <CategoryPill id="all" label="All" />
-                            <CategoryPill id="vip" label="VIP" icon={<Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />} />
-                            <CategoryPill id="standing" label="Standing" />
-                            <CategoryPill id="seated" label="Seated" />
-                            <CategoryPill id="aisle" label="Aisle" />
+                            <CategoryPill id="all" label="All" selected={category === "all"} onClick={() => setCategory("all")} />
+                            <CategoryPill id="vip" label="VIP" selected={category === "vip"} onClick={() => setCategory("vip")} icon={<Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />} />
+                            <CategoryPill id="standing" label="Standing" selected={category === "standing"} onClick={() => setCategory("standing")} />
+                            <CategoryPill id="seated" label="Seated" selected={category === "seated"} onClick={() => setCategory("seated")} />
+                            <CategoryPill id="aisle" label="Aisle" selected={category === "aisle"} onClick={() => setCategory("aisle")} />
                         </div>
 
                         {/* Level 3: Price Range Filter */}
@@ -256,3 +242,29 @@ export function EventBooking({ event }: EventBookingProps) {
         </div>
     );
 }
+ 
+ i n t e r f a c e   C a t e g o r y P i l l P r o p s   {  
+         i d :   C a t e g o r y O p t i o n ;  
+         l a b e l :   s t r i n g ;  
+         i c o n ? :   R e a c t . R e a c t N o d e ;  
+         s e l e c t e d :   b o o l e a n ;  
+         o n C l i c k :   ( )   = >   v o i d ;  
+ }  
+  
+ f u n c t i o n   C a t e g o r y P i l l ( {   i d ,   l a b e l ,   i c o n ,   s e l e c t e d ,   o n C l i c k   } :   C a t e g o r y P i l l P r o p s )   {  
+         r e t u r n   (  
+                 < b u t t o n  
+                         o n C l i c k = { o n C l i c k }  
+                         c l a s s N a m e = { c n (  
+                                 " p x - 4   p y - 1 . 5   r o u n d e d - f u l l   t e x t - x s   f o n t - m e d i u m   w h i t e s p a c e - n o w r a p   t r a n s i t i o n - a l l   f l e x   i t e m s - c e n t e r   g a p - 1 " ,  
+                                 s e l e c t e d  
+                                         ?   " b g - w h i t e   t e x t - b l a c k "  
+                                         :   " b g - w h i t e / 5   b o r d e r   b o r d e r - w h i t e / 1 0   t e x t - g r a y - 3 0 0   h o v e r : b g - w h i t e / 1 0   h o v e r : b o r d e r - w h i t e / 3 0 "  
+                         ) }  
+                 >  
+                         { i c o n }  
+                         { l a b e l }  
+                 < / b u t t o n >  
+         ) ;  
+ }  
+ 
