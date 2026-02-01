@@ -94,6 +94,35 @@ export interface Translations {
         securePayments: string;
         copyright: string;
     };
+    // Success page
+    success: {
+        verifying: string;
+        verifyingDesc: string;
+        dontClose: string;
+        paymentMethod: string;
+        methodIban: string;
+        methodCard: string;
+        methodPaypal: string;
+        paymentSuccess: string;
+        orderConfirmed: string;
+        contactUs: string;
+        weWillSend: string;
+        whatsapp: string;
+        openWhatsapp: string;
+        ticketsIn15min: string;
+        backToHome: string;
+    };
+    // PayPal
+    paypal: {
+        ffWarning: string;
+        ffWarningDesc: string;
+        paypalLink: string;
+        amountToPay: string;
+        orderRef: string;
+        orderRefDesc: string;
+        openPaypal: string;
+        afterPayment: string;
+    };
     // General
     general: {
         loading: string;
@@ -187,6 +216,33 @@ export const translations: Record<Language, Translations> = {
             securePayments: "Secure payments with",
             copyright: "© 2026 BTS Europe Tour. All rights reserved.",
         },
+        success: {
+            verifying: "Verifying payment...",
+            verifyingDesc: "We are verifying your payment. This may take up to 3 minutes.",
+            dontClose: "Please don't close this page.",
+            paymentMethod: "Payment method:",
+            methodIban: "Bank Transfer (IBAN)",
+            methodCard: "Credit Card",
+            methodPaypal: "PayPal",
+            paymentSuccess: "Payment Successful!",
+            orderConfirmed: "Your order is confirmed. Contact us to receive your tickets.",
+            contactUs: "Contact Us",
+            weWillSend: "We will send your tickets",
+            whatsapp: "WhatsApp",
+            openWhatsapp: "Open WhatsApp",
+            ticketsIn15min: "Message us and we'll send your e-tickets within 15 minutes.",
+            backToHome: "Back to Home",
+        },
+        paypal: {
+            ffWarning: "IMPORTANT: Pay ONLY via PayPal Friends & Family!",
+            ffWarningDesc: "Payments via \"Goods & Services\" will be declined and refunded.",
+            paypalLink: "PayPal Link",
+            amountToPay: "Amount to pay",
+            orderRef: "Order reference",
+            orderRefDesc: "Include in payment comment",
+            openPaypal: "Open PayPal",
+            afterPayment: "After payment, click the button above to go to the confirmation page",
+        },
         general: {
             loading: "Loading...",
         },
@@ -276,6 +332,33 @@ export const translations: Record<Language, Translations> = {
             support: "Support",
             securePayments: "Sichere Zahlung mit",
             copyright: "© 2026 BTS Europe Tour. Alle Rechte vorbehalten.",
+        },
+        success: {
+            verifying: "Zahlung wird überprüft...",
+            verifyingDesc: "Wir überprüfen Ihre Zahlung. Dies kann bis zu 3 Minuten dauern.",
+            dontClose: "Bitte schließen Sie diese Seite nicht.",
+            paymentMethod: "Zahlungsmethode:",
+            methodIban: "Banküberweisung (IBAN)",
+            methodCard: "Kreditkarte",
+            methodPaypal: "PayPal",
+            paymentSuccess: "Zahlung erfolgreich!",
+            orderConfirmed: "Ihre Bestellung ist bestätigt. Kontaktieren Sie uns, um Ihre Tickets zu erhalten.",
+            contactUs: "Kontaktieren Sie uns",
+            weWillSend: "Wir senden Ihnen die Tickets",
+            whatsapp: "WhatsApp",
+            openWhatsapp: "WhatsApp öffnen",
+            ticketsIn15min: "Schreiben Sie uns und wir senden Ihnen Ihre E-Tickets innerhalb von 15 Minuten.",
+            backToHome: "Zurück zur Startseite",
+        },
+        paypal: {
+            ffWarning: "WICHTIG: Zahlen Sie NUR über PayPal Friends & Family!",
+            ffWarningDesc: "Zahlungen über \"Waren & Dienstleistungen\" werden abgelehnt und zurückerstattet.",
+            paypalLink: "PayPal-Link",
+            amountToPay: "Zu zahlender Betrag",
+            orderRef: "Bestellreferenz",
+            orderRefDesc: "Im Zahlungskommentar angeben",
+            openPaypal: "PayPal öffnen",
+            afterPayment: "Nach der Zahlung klicken Sie auf die Schaltfläche oben, um zur Bestätigungsseite zu gelangen",
         },
         general: {
             loading: "Laden...",
@@ -367,6 +450,33 @@ export const translations: Record<Language, Translations> = {
             securePayments: "Pagos seguros con",
             copyright: "© 2026 BTS Europe Tour. Todos los derechos reservados.",
         },
+        success: {
+            verifying: "Verificando pago...",
+            verifyingDesc: "Estamos verificando tu pago. Esto puede tardar hasta 3 minutos.",
+            dontClose: "Por favor, no cierres esta página.",
+            paymentMethod: "Método de pago:",
+            methodIban: "Transferencia Bancaria (IBAN)",
+            methodCard: "Tarjeta de Crédito",
+            methodPaypal: "PayPal",
+            paymentSuccess: "¡Pago Exitoso!",
+            orderConfirmed: "Tu pedido está confirmado. Contáctanos para recibir tus entradas.",
+            contactUs: "Contáctanos",
+            weWillSend: "Te enviaremos las entradas",
+            whatsapp: "WhatsApp",
+            openWhatsapp: "Abrir WhatsApp",
+            ticketsIn15min: "Escríbenos y te enviaremos tus e-tickets en 15 minutos.",
+            backToHome: "Volver al Inicio",
+        },
+        paypal: {
+            ffWarning: "¡IMPORTANTE: Paga SOLO vía PayPal Friends & Family!",
+            ffWarningDesc: "Los pagos vía \"Bienes y Servicios\" serán rechazados y reembolsados.",
+            paypalLink: "Enlace PayPal",
+            amountToPay: "Importe a pagar",
+            orderRef: "Referencia del pedido",
+            orderRefDesc: "Incluir en el comentario del pago",
+            openPaypal: "Abrir PayPal",
+            afterPayment: "Después del pago, haz clic en el botón de arriba para ir a la página de confirmación",
+        },
         general: {
             loading: "Cargando...",
         },
@@ -456,6 +566,33 @@ export const translations: Record<Language, Translations> = {
             support: "Support",
             securePayments: "Paiements sécurisés avec",
             copyright: "© 2026 BTS Europe Tour. Tous droits réservés.",
+        },
+        success: {
+            verifying: "Vérification du paiement...",
+            verifyingDesc: "Nous vérifions votre paiement. Cela peut prendre jusqu'à 3 minutes.",
+            dontClose: "Veuillez ne pas fermer cette page.",
+            paymentMethod: "Mode de paiement:",
+            methodIban: "Virement Bancaire (IBAN)",
+            methodCard: "Carte Bancaire",
+            methodPaypal: "PayPal",
+            paymentSuccess: "Paiement Réussi!",
+            orderConfirmed: "Votre commande est confirmée. Contactez-nous pour recevoir vos billets.",
+            contactUs: "Contactez-nous",
+            weWillSend: "Nous vous enverrons les billets",
+            whatsapp: "WhatsApp",
+            openWhatsapp: "Ouvrir WhatsApp",
+            ticketsIn15min: "Écrivez-nous et nous vous enverrons vos e-billets en 15 minutes.",
+            backToHome: "Retour à l'Accueil",
+        },
+        paypal: {
+            ffWarning: "IMPORTANT: Payez UNIQUEMENT via PayPal Friends & Family!",
+            ffWarningDesc: "Les paiements via \"Biens et Services\" seront refusés et remboursés.",
+            paypalLink: "Lien PayPal",
+            amountToPay: "Montant à payer",
+            orderRef: "Référence de commande",
+            orderRefDesc: "Inclure dans le commentaire du paiement",
+            openPaypal: "Ouvrir PayPal",
+            afterPayment: "Après le paiement, cliquez sur le bouton ci-dessus pour accéder à la page de confirmation",
         },
         general: {
             loading: "Chargement...",

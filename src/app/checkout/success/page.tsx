@@ -5,11 +5,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader2, MessageCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useLanguage } from "@/lib/language-context";
 
 // Inner component that uses useSearchParams
 function SuccessContent() {
     const searchParams = useSearchParams();
     const method = searchParams.get("method") || "card";
+    const { t } = useLanguage();
 
     const [timeLeft, setTimeLeft] = useState(180); // 3 minutes = 180 seconds
     const [isVerified, setIsVerified] = useState(false);
@@ -44,6 +46,13 @@ function SuccessContent() {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     const progress = ((180 - timeLeft) / 180) * 100;
+
+    // Get payment method label
+    const getMethodLabel = () => {
+        if (method === "iban") return t.success.methodIban;
+        if (method === "paypal") return t.success.methodPaypal;
+        return t.success.methodCard;
+    };
 
     // Verification pending UI
     if (!isVerified) {
@@ -90,17 +99,17 @@ function SuccessContent() {
                     </div>
                 </div>
 
-                <h1 className="text-3xl font-bold mb-4">Проверка платежа...</h1>
+                <h1 className="text-3xl font-bold mb-4">{t.success.verifying}</h1>
                 <p className="text-gray-400 max-w-md mb-4">
-                    Мы проверяем поступление вашего платежа. Это может занять до 3 минут.
+                    {t.success.verifyingDesc}
                 </p>
                 <p className="text-sm text-gray-500">
-                    Пожалуйста, не закрывайте эту страницу.
+                    {t.success.dontClose}
                 </p>
 
                 <div className="mt-8 bg-white/5 p-4 rounded-lg border border-white/10 max-w-sm">
                     <p className="text-xs text-gray-400">
-                        Способ оплаты: <span className="text-white font-medium">{method === "iban" ? "Банковский перевод (IBAN)" : method === "paypal" ? "PayPal" : "Банковская карта"}</span>
+                        {t.success.paymentMethod} <span className="text-white font-medium">{getMethodLabel()}</span>
                     </p>
                 </div>
             </div>
@@ -118,10 +127,10 @@ function SuccessContent() {
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                Оплата прошла успешно!
+                {t.success.paymentSuccess}
             </h1>
             <p className="text-xl text-gray-300 max-w-lg mb-8">
-                Ваш заказ подтвержден. Для получения билетов свяжитесь с нами.
+                {t.success.orderConfirmed}
             </p>
 
             {/* WhatsApp Contact Card */}
@@ -131,13 +140,13 @@ function SuccessContent() {
                         <MessageCircle className="w-7 h-7 text-white" />
                     </div>
                     <div className="text-left">
-                        <h3 className="text-lg font-bold text-white">Свяжитесь с нами</h3>
-                        <p className="text-sm text-gray-400">Мы отправим вам билеты</p>
+                        <h3 className="text-lg font-bold text-white">{t.success.contactUs}</h3>
+                        <p className="text-sm text-gray-400">{t.success.weWillSend}</p>
                     </div>
                 </div>
 
                 <div className="bg-black/30 p-4 rounded-xl mb-4">
-                    <div className="text-xs text-gray-500 mb-1">WhatsApp</div>
+                    <div className="text-xs text-gray-500 mb-1">{t.success.whatsapp}</div>
                     <div className="text-2xl font-bold text-green-400 font-mono">
                         {whatsappNumber}
                     </div>
@@ -150,17 +159,17 @@ function SuccessContent() {
                     className="w-full px-6 py-4 bg-green-500 hover:bg-green-400 text-white text-lg font-bold rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/25"
                 >
                     <MessageCircle className="w-6 h-6" />
-                    Открыть WhatsApp
+                    {t.success.openWhatsapp}
                 </a>
 
                 <p className="text-xs text-gray-500 mt-4">
-                    Напишите нам, и мы отправим ваши электронные билеты в течение 15 минут.
+                    {t.success.ticketsIn15min}
                 </p>
             </div>
 
             <Link href="/">
                 <Button variant="outline" size="lg" className="border-white/20 hover:bg-white/5">
-                    Вернуться на главную
+                    {t.success.backToHome}
                 </Button>
             </Link>
         </div>
@@ -172,7 +181,6 @@ function LoadingFallback() {
     return (
         <div className="min-h-screen bg-secondary text-white flex flex-col items-center justify-center p-4">
             <Loader2 className="w-12 h-12 text-purple-400 animate-spin" />
-            <p className="text-gray-400 mt-4">Загрузка...</p>
         </div>
     );
 }

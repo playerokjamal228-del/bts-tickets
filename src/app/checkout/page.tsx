@@ -483,10 +483,10 @@ export default function CheckoutPage() {
                                             {/* Friends & Family Warning */}
                                             <div className="bg-red-500/20 border border-red-500/40 rounded-lg p-4">
                                                 <p className="text-red-300 text-sm font-bold flex items-center gap-2">
-                                                    ⚠️ ВАЖНО: Оплата СТРОГО через PayPal Friends & Family!
+                                                    ⚠️ {t.paypal.ffWarning}
                                                 </p>
                                                 <p className="text-red-200/80 text-xs mt-1">
-                                                    Платежи через "Goods & Services" будут отклонены и возвращены.
+                                                    {t.paypal.ffWarningDesc}
                                                 </p>
                                             </div>
 
@@ -502,7 +502,7 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div className="bg-black/30 p-4 rounded-lg mb-4">
-                                                    <div className="text-xs text-gray-500 mb-2">PayPal Link</div>
+                                                    <div className="text-xs text-gray-500 mb-2">{t.paypal.paypalLink}</div>
                                                     <div className="flex items-center justify-between">
                                                         <span className="text-lg font-bold text-blue-400 font-mono">
                                                             {ibanLoading ? (
@@ -515,12 +515,12 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div className="bg-black/20 p-3 rounded-lg mb-4">
-                                                    <div className="text-xs text-gray-500 mb-1">Сумма к оплате</div>
+                                                    <div className="text-xs text-gray-500 mb-1">{t.paypal.amountToPay}</div>
                                                     <div className="text-2xl font-bold text-white">€{totalAmount()}</div>
                                                 </div>
 
                                                 <div className="bg-black/20 p-3 rounded-lg mb-4">
-                                                    <div className="text-xs text-gray-500 mb-1">Референс заказа (указать в комментарии)</div>
+                                                    <div className="text-xs text-gray-500 mb-1">{t.paypal.orderRef} ({t.paypal.orderRefDesc})</div>
                                                     <div className="text-lg font-mono text-blue-400">{orderRef}</div>
                                                 </div>
 
@@ -535,11 +535,11 @@ export default function CheckoutPage() {
                                                     className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-blue-500/25"
                                                 >
                                                     <span className="text-xl">P</span>
-                                                    Открыть PayPal
+                                                    {t.paypal.openPaypal}
                                                 </a>
 
                                                 <p className="text-xs text-gray-500 mt-3 text-center">
-                                                    После оплаты нажмите кнопку выше — вы попадёте на страницу подтверждения
+                                                    {t.paypal.afterPayment}
                                                 </p>
                                             </div>
                                         </div>
