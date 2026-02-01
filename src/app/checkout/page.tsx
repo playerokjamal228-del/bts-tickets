@@ -83,11 +83,15 @@ export default function CheckoutPage() {
             });
     }, []);
 
+    // Email validation regex
+    const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
     // Check if billing is complete
     const isBillingComplete =
         billing.firstName.trim() !== "" &&
         billing.lastName.trim() !== "" &&
         billing.email.trim() !== "" &&
+        isValidEmail(billing.email) &&
         billing.address.trim() !== "" &&
         billing.city.trim() !== "" &&
         billing.postalCode.trim() !== "";

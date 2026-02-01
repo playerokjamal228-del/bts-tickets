@@ -80,41 +80,41 @@ export const getEventData = (id: string): EventData | null => {
 
     if (id === "uk") {
         // London (Wembley)
-        addOffers(generateRange("", 101, 144), "Block", "Lower", 250);
-        addOffers(generateRange("", 201, 252), "Club Block", "Club", 350);
-        addOffers(generateRange("", 501, 552), "Upper Block", "Upper", 120);
-        addOffers(["North Pitch", "South Pitch", "East Pitch", "West Pitch"], "Pitch", "Interior", 300);
+        addOffers(generateRange("", 101, 144), "Block", "Lower", 500);
+        addOffers(generateRange("", 201, 252), "Club Block", "Club", 700);
+        addOffers(generateRange("", 501, 552), "Upper Block", "Upper", 240);
+        addOffers(["North Pitch", "South Pitch", "East Pitch", "West Pitch"], "Pitch", "Interior", 600);
     }
     else if (id === "germany") {
         // Munich (Allianz Arena)
-        addOffers(generateRange("", 301, 348), "Block", "Upper", 120);
-        addOffers(generateRange("", 201, 247), "Block", "Club", 280);
-        addOffers(generateRange("", 101, 136), "Block", "Lower", 350);
-        addOffers(["Zone A", "Zone B", "Zone C", "Zone D"], "Standing", "Interior", 180);
+        addOffers(generateRange("", 301, 348), "Block", "Upper", 240);
+        addOffers(generateRange("", 201, 247), "Block", "Club", 560);
+        addOffers(generateRange("", 101, 136), "Block", "Lower", 700);
+        addOffers(["Zone A", "Zone B", "Zone C", "Zone D"], "Standing", "Interior", 360);
     }
     else if (id === "belgium") {
         // Brussels - match StadiumWidget sector IDs
-        addOffers(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], "Tribune", "Grandstand", 150);
-        addOffers(["O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"], "Tribune", "Grandstand", 130);
-        addOffers(["AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL"], "Tribune", "Grandstand", 120);
-        addOffers(["AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW"], "Tribune", "Grandstand", 120);
-        addOffers(["Pitch"], "Zone", "Interior", 200);
-        addOffers(["Standing Zone A", "Standing Zone B", "Standing Zone C", "Standing Zone D"], "Floor", "Interior", 190);
+        addOffers(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], "Tribune", "Grandstand", 300);
+        addOffers(["O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"], "Tribune", "Grandstand", 260);
+        addOffers(["AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL"], "Tribune", "Grandstand", 240);
+        addOffers(["AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW"], "Tribune", "Grandstand", 240);
+        addOffers(["Pitch"], "Zone", "Interior", 400);
+        addOffers(["Standing Zone A", "Standing Zone B", "Standing Zone C", "Standing Zone D"], "Floor", "Interior", 380);
     }
     else if (id === "spain") {
         // Madrid
-        addOffers(generateRange("", 420, 435), "Sector", "Upper", 110);
-        addOffers(generateRange("", 301, 324), "Sector", "Middle", 150);
-        addOffers(generateRange("", 201, 220), "Sector", "Lower", 200);
-        addOffers(generateRange("", 101, 114), "Sector", "Premium", 300);
-        addOffers(generateRange("", 501, 510), "Grada", "Standard", 90);
-        addOffers(["A", "B", "C", "D"], "Pista", "Interior", 180);
+        addOffers(generateRange("", 420, 435), "Sector", "Upper", 220);
+        addOffers(generateRange("", 301, 324), "Sector", "Middle", 300);
+        addOffers(generateRange("", 201, 220), "Sector", "Lower", 400);
+        addOffers(generateRange("", 101, 114), "Sector", "Premium", 600);
+        addOffers(generateRange("", 501, 510), "Grada", "Standard", 180);
+        addOffers(["A", "B", "C", "D"], "Pista", "Interior", 360);
     }
     else {
         // Generic fallback
-        addOffers(["101", "102", "103"], "Sector", "Lower", 100);
-        addOffers(["201", "202", "203"], "Sector", "Upper", 80);
-        addOffers(["GA"], "Floor", "Interior", 150);
+        addOffers(["101", "102", "103"], "Sector", "Lower", 200);
+        addOffers(["201", "202", "203"], "Sector", "Upper", 160);
+        addOffers(["GA"], "Floor", "Interior", 300);
     }
 
     return {
