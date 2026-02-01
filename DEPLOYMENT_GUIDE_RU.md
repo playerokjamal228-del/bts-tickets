@@ -198,12 +198,94 @@ certbot --nginx -d yourdomain.com
 
 ---
 
-## 9. Полезные команды
+## 9. Настройка Facebook Pixel (Отслеживание конверсий)
+
+Facebook Pixel позволяет отслеживать посетителей и конверсии для рекламы.
+
+### Получение Pixel ID:
+1. Откройте [Facebook Events Manager](https://business.facebook.com/events_manager)
+2. Создайте новый Pixel или используйте существующий
+3. Скопируйте **Pixel ID** (числовой идентификатор)
+
+### Настройка в проекте:
+Добавьте в файл `.env`:
+```env
+NEXT_PUBLIC_FACEBOOK_PIXEL_ID="ваш_pixel_id"
+```
+
+После перезапуска (`docker-compose restart app`) пиксель начнет отслеживать:
+- `PageView` — просмотры страниц
+- `InitiateCheckout` — начало оформления заказа
+- `Purchase` — завершение покупки
+
+---
+
+## 10. Настройка Telegram Webhook (Управление ботом)
+
+Webhook позволяет боту получать команды и управлять настройками через Telegram.
+
+### Установка Webhook:
+Замените `YOUR_BOT_TOKEN` и `YOUR_DOMAIN`:
+```bash
+curl "https://api.telegram.org/botYOUR_BOT_TOKEN/setWebhook?url=https://YOUR_DOMAIN/api/telegram-webhook"
+```
+
+### Команды бота:
+После настройки webhook, отправьте боту:
+- `/iban DE89 3700 1000 2889 1100 22` — изменить IBAN
+- `/bic COBADEFFXXX` — изменить BIC
+- `/holder Имя Владельца` — изменить имя получателя
+- `/bank Название Банка` — изменить название банка
+- `/whatsapp +49123456789` — изменить номер WhatsApp
+- `/info` — показать текущие настройки
+
+> [!TIP]
+> Все изменения применяются мгновенно без перезапуска сервера.
+
+---
+
+## 11. Управление IBAN и WhatsApp
+
+### Через Telegram бота (рекомендуется):
+Это самый удобный способ — просто отправьте команду боту (см. выше).
+
+### Через API (альтернатива):
+Вы также можете получить текущие настройки через GET-запрос:
+```bash
+curl https://YOUR_DOMAIN/api/admin/update-iban
+```
+
+---
+
+## 12. Полезные команды
 
 - **Логи приложения:** `docker-compose logs -f app`
 - **Перезапуск проекта:** `docker-compose restart`
 - **Остановка:** `docker-compose down`
 - **Проверка статуса контейнеров:** `docker ps`
+- **Обновление после изменений в GitHub:**
+  ```bash
+  git pull origin main
+  docker-compose up -d --build
+  ```
+
+---
+
+## 13. Решение проблем
+
+### Сайт не открывается:
+1. Проверьте статус контейнеров: `docker ps`
+2. Посмотрите логи: `docker-compose logs app`
+3. Убедитесь, что порт 3000 открыт: `ufw allow 3000`
+
+### Telegram уведомления не приходят:
+1. Проверьте правильность токена и Chat ID в `.env`
+2. Убедитесь, что бот добавлен в чат (для групп)
+3. Перезапустите: `docker-compose restart app`
+
+### IBAN не обновляется:
+1. Проверьте webhook: отправьте `/info` боту
+2. Посмотрите логи: `docker-compose logs app | grep webhook`
 
 ---
 
