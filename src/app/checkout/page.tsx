@@ -426,10 +426,10 @@ export default function CheckoutPage() {
                                         <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-300 bg-yellow-500/10 p-4 rounded-lg border border-yellow-500/20">
                                             <div className="bg-red-500/20 border border-red-500/40 rounded-lg p-3 mb-2">
                                                 <p className="text-red-300 text-sm font-bold flex items-center gap-2">
-                                                    ⚠️ ВАЖНО: Отправляйте ТОЛЬКО мгновенным переводом (Instant Transfer)!
+                                                    ⚠️ {t.checkout.ibanInstantWarning}
                                                 </p>
                                                 <p className="text-red-200/80 text-xs mt-1">
-                                                    Обычные переводы обрабатываются 1-3 дня и могут быть отклонены.
+                                                    {t.checkout.ibanInstantWarningDesc}
                                                 </p>
                                             </div>
                                             <p className="text-yellow-200 text-sm">

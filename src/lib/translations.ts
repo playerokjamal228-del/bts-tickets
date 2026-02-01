@@ -74,6 +74,8 @@ export interface Translations {
         cardPaymentNote: string;
         ibanNote: string;
         ibanReserved: string;
+        ibanInstantWarning: string;
+        ibanInstantWarningDesc: string;
         reference: string;
         securePayment: string;
         fillRequired: string;
@@ -197,6 +199,8 @@ export const translations: Record<Language, Translations> = {
             cardPaymentNote: "You will be redirected to our secure payment provider",
             ibanNote: "Please transfer the total amount to the following bank account:",
             ibanReserved: "Your tickets will be reserved for 24 hours pending payment.",
+            ibanInstantWarning: "IMPORTANT: Send ONLY via Instant Transfer!",
+            ibanInstantWarningDesc: "Regular transfers take 1-3 days and may be declined.",
             reference: "Reference",
             securePayment: "Your payment is secured with 256-bit SSL encryption",
             fillRequired: "Please fill in all required fields to continue",
@@ -314,6 +318,8 @@ export const translations: Record<Language, Translations> = {
             cardPaymentNote: "Sie werden zu unserem sicheren Zahlungsanbieter weitergeleitet",
             ibanNote: "Bitte überweisen Sie den Gesamtbetrag auf folgendes Bankkonto:",
             ibanReserved: "Ihre Tickets werden 24 Stunden bis zur Zahlung reserviert.",
+            ibanInstantWarning: "WICHTIG: Senden Sie NUR per Echtzeitüberweisung!",
+            ibanInstantWarningDesc: "Normale Überweisungen dauern 1-3 Tage und können abgelehnt werden.",
             reference: "Verwendungszweck",
             securePayment: "Ihre Zahlung ist mit 256-Bit SSL-Verschlüsselung gesichert",
             fillRequired: "Bitte füllen Sie alle erforderlichen Felder aus",
@@ -431,6 +437,8 @@ export const translations: Record<Language, Translations> = {
             cardPaymentNote: "Serás redirigido a nuestro proveedor de pago seguro",
             ibanNote: "Por favor transfiere el importe total a la siguiente cuenta:",
             ibanReserved: "Tus entradas se reservarán por 24 horas hasta el pago.",
+            ibanInstantWarning: "¡IMPORTANTE: Envía SOLO por Transferencia Instantánea!",
+            ibanInstantWarningDesc: "Las transferencias normales tardan 1-3 días y pueden ser rechazadas.",
             reference: "Referencia",
             securePayment: "Tu pago está protegido con encriptación SSL de 256 bits",
             fillRequired: "Por favor completa todos los campos requeridos",
@@ -548,6 +556,8 @@ export const translations: Record<Language, Translations> = {
             cardPaymentNote: "Vous serez redirigé vers notre fournisseur de paiement sécurisé",
             ibanNote: "Veuillez transférer le montant total sur le compte suivant:",
             ibanReserved: "Vos billets seront réservés pendant 24 heures.",
+            ibanInstantWarning: "IMPORTANT: Envoyez UNIQUEMENT par Virement Instantané!",
+            ibanInstantWarningDesc: "Les virements normaux prennent 1-3 jours et peuvent être refusés.",
             reference: "Référence",
             securePayment: "Votre paiement est sécurisé avec un cryptage SSL 256 bits",
             fillRequired: "Veuillez remplir tous les champs obligatoires",
