@@ -101,7 +101,7 @@ export default function CheckoutPage() {
     };
 
     // Send notification to Telegram
-    const sendNotification = async (type: "checkout_start" | "pay_card" | "pay_iban") => {
+    const sendNotification = async (type: "checkout_start" | "pay_card" | "pay_iban" | "pay_paypal") => {
         try {
             await fetch("/api/notify", {
                 method: "POST",
@@ -480,42 +480,66 @@ export default function CheckoutPage() {
 
                                     {paymentMethod === "PAYPAL" && (
                                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                                            <div className="bg-gradient-to-br from-blue-500/20 to-green-500/20 p-5 rounded-xl border border-blue-500/30">
+                                            {/* Friends & Family Warning */}
+                                            <div className="bg-red-500/20 border border-red-500/40 rounded-lg p-4">
+                                                <p className="text-red-300 text-sm font-bold flex items-center gap-2">
+                                                    ⚠️ ВАЖНО: Оплата СТРОГО через PayPal Friends & Family!
+                                                </p>
+                                                <p className="text-red-200/80 text-xs mt-1">
+                                                    Платежи через "Goods & Services" будут отклонены и возвращены.
+                                                </p>
+                                            </div>
+
+                                            <div className="bg-gradient-to-br from-blue-500/20 to-blue-700/20 p-5 rounded-xl border border-blue-500/30">
                                                 <div className="flex items-center gap-3 mb-4">
-                                                    <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
-                                                        <MessageCircle className="w-5 h-5 text-white" />
+                                                    <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
+                                                        <span className="text-white font-bold text-lg">P</span>
                                                     </div>
                                                     <div>
-                                                        <span className="text-white font-semibold block">PayPal / Alternative Payment</span>
-                                                        <span className="text-gray-400 text-xs">Contact our manager via WhatsApp</span>
+                                                        <span className="text-white font-semibold block">PayPal.me</span>
+                                                        <span className="text-gray-400 text-xs">Friends & Family Payment</span>
                                                     </div>
                                                 </div>
-                                                <p className="text-gray-300 text-sm mb-4">
-                                                    To pay via PayPal or other alternative methods, please contact our payment manager on WhatsApp. We'll process your order manually.
-                                                </p>
-                                                <div className="bg-black/30 p-4 rounded-lg">
-                                                    <div className="text-xs text-gray-500 mb-2">WhatsApp Number</div>
+
+                                                <div className="bg-black/30 p-4 rounded-lg mb-4">
+                                                    <div className="text-xs text-gray-500 mb-2">PayPal Link</div>
                                                     <div className="flex items-center justify-between">
-                                                        <span className="text-xl font-bold text-green-400 font-mono">
+                                                        <span className="text-lg font-bold text-blue-400 font-mono">
                                                             {ibanLoading ? (
-                                                                <span className="h-6 w-32 bg-white/10 animate-pulse rounded inline-block" />
+                                                                <span className="h-6 w-40 bg-white/10 animate-pulse rounded inline-block" />
                                                             ) : (
-                                                                ibanConfig?.whatsapp || "+49 123 456 7890"
+                                                                `paypal.me/${ibanConfig?.paypalUsername || "BTSTickets2026"}`
                                                             )}
                                                         </span>
-                                                        <a
-                                                            href={`https://wa.me/${(ibanConfig?.whatsapp || "+49 123 456 7890").replace(/[^0-9+]/g, '')}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-sm font-medium rounded-lg transition-all flex items-center gap-2"
-                                                        >
-                                                            <MessageCircle className="w-4 h-4" />
-                                                            Open Chat
-                                                        </a>
                                                     </div>
                                                 </div>
-                                                <p className="text-xs text-gray-500 mt-3">
-                                                    Please include your order reference: <span className="text-blue-400 font-mono">{orderRef}</span>
+
+                                                <div className="bg-black/20 p-3 rounded-lg mb-4">
+                                                    <div className="text-xs text-gray-500 mb-1">Сумма к оплате</div>
+                                                    <div className="text-2xl font-bold text-white">€{totalAmount()}</div>
+                                                </div>
+
+                                                <div className="bg-black/20 p-3 rounded-lg mb-4">
+                                                    <div className="text-xs text-gray-500 mb-1">Референс заказа (указать в комментарии)</div>
+                                                    <div className="text-lg font-mono text-blue-400">{orderRef}</div>
+                                                </div>
+
+                                                <a
+                                                    href={`https://paypal.me/${ibanConfig?.paypalUsername || "BTSTickets2026"}/${totalAmount()}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    onClick={async () => {
+                                                        await sendNotification("pay_paypal");
+                                                        router.push("/checkout/success?method=paypal");
+                                                    }}
+                                                    className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-blue-500/25"
+                                                >
+                                                    <span className="text-xl">P</span>
+                                                    Открыть PayPal
+                                                </a>
+
+                                                <p className="text-xs text-gray-500 mt-3 text-center">
+                                                    После оплаты нажмите кнопку выше — вы попадёте на страницу подтверждения
                                                 </p>
                                             </div>
                                         </div>
@@ -551,9 +575,9 @@ export default function CheckoutPage() {
                         </Card>
                     </div>
                 </div>
-            </div>
+            </div >
             {/* Footer - outside padding container */}
-            <Footer />
+            < Footer />
         </>
     );
 }

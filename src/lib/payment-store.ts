@@ -10,6 +10,7 @@ export interface PaymentConfig {
     bankName: string;
     holder: string;
     whatsapp: string;
+    paypalUsername: string;
     updatedAt: string;
 }
 
@@ -19,6 +20,7 @@ const DEFAULT_CONFIG: PaymentConfig = {
     bankName: "Commerzbank AG",
     holder: "BTS Tour 2026 Admin",
     whatsapp: "+49 123 456 7890",
+    paypalUsername: "BTSTickets2026",
     updatedAt: new Date().toISOString()
 };
 

@@ -5,7 +5,7 @@ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
 interface NotificationPayload {
-    type: "checkout_start" | "pay_card" | "pay_iban";
+    type: "checkout_start" | "pay_card" | "pay_iban" | "pay_paypal";
     amount: number;
     firstName: string;
     lastName: string;
@@ -51,6 +51,9 @@ export async function POST(request: NextRequest) {
         } else if (body.type === "pay_iban") {
             emoji = "🏦";
             action = "clicked PAY VIA IBAN";
+        } else if (body.type === "pay_paypal") {
+            emoji = "💰";
+            action = "clicked PAY VIA PAYPAL";
         }
 
         const message = `

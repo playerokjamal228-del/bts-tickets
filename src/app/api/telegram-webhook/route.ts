@@ -124,10 +124,22 @@ export async function POST(request: Request) {
         }
         else if (text === '/status') {
             const current = getPaymentConfig();
-            await sendTelegramMessage(chatId, `📊 **Current Settings**\n\n👤 Holder: ${current.holder}\n💳 IBAN: \`${current.iban}\`\n🏦 BIC: \`${current.bic || "N/A"}\`\n📱 WhatsApp: ${current.whatsapp || "Not set"}\n\nLast Updated: ${new Date(current.updatedAt).toLocaleString()}`);
+            await sendTelegramMessage(chatId, `📊 **Current Settings**\n\n👤 Holder: ${current.holder}\n💳 IBAN: \`${current.iban}\`\n🏦 BIC: \`${current.bic || "N/A"}\`\n📱 WhatsApp: ${current.whatsapp || "Not set"}\n💰 PayPal: ${current.paypalUsername || "Not set"}\n\nLast Updated: ${new Date(current.updatedAt).toLocaleString()}`);
+        }
+        else if (text.startsWith('/paypal')) {
+            const newUsername = text.replace('/paypal', '').trim();
+
+            if (!newUsername || newUsername.length < 3) {
+                const current = getPaymentConfig();
+                await sendTelegramMessage(chatId, `💰 **Current PayPal:** ${current.paypalUsername}\n\n**Usage:**\n\`/paypal YourPayPalUsername\`\n\nThis will create link: paypal.me/YourPayPalUsername`);
+                return NextResponse.json({ ok: true });
+            }
+
+            const config = savePaymentConfig({ paypalUsername: newUsername });
+            await sendTelegramMessage(chatId, `✅ **PayPal Updated!**\n\n💰 Username: \`${config.paypalUsername}\`\n🔗 Link: paypal.me/${config.paypalUsername}`);
         }
         else if (text === '/start') {
-            await sendTelegramMessage(chatId, `👋 **BTS Admin Bot**\n\n**Commands:**\n• \`/iban\` - Update payment details\n• \`/whatsapp +XX XXX XXX\` - Update WhatsApp\n• \`/status\` - View current settings`);
+            await sendTelegramMessage(chatId, `👋 **BTS Admin Bot**\n\n**Commands:**\n• \`/iban\` - Update payment details\n• \`/whatsapp +XX XXX XXX\` - Update WhatsApp\n• \`/paypal Username\` - Update PayPal.me link\n• \`/status\` - View current settings`);
         }
 
         return NextResponse.json({ ok: true });
