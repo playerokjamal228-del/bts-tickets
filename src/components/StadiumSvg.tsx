@@ -128,6 +128,29 @@ export function StadiumSvg({
                 stroke: #fff !important;
                 stroke-width: 2px !important;
             }
+
+            /* Hide VIP Label if present */
+            #VIP, #vip, .vip, g[id="VIP"], g[id="vip"], g[label="VIP"] { display: none !important; opacity: 0 !important; visibility: hidden !important; }
+
+            /* Fix for white border/frame in some SVGs */
+            /* Target specific static background elements */
+            #static-elements path, #static-elements rect, 
+            g[id*="background"] path, g[id*="Background"] path,
+            svg .fil0 /* specific class from belgium.svg background */
+            { fill: #1f2937 !important; stroke: none !important; opacity: 0.1 !important; }
+
+            /* Force stroke transparent for white strokes to hide frame */
+            svg path[stroke="#fff"], svg path[stroke="#ffffff"], svg path[stroke="white"],
+            svg .str0, svg .str1, svg .str2 /* specific classes from belgium.svg */
+            { stroke: transparent !important; stroke-width: 0 !important; }
+            
+            svg path[fill="none"] { stroke: none !important; }
+            
+            /* Hide white backgrounds or make them match theme */
+            .bg-white, svg [fill="#fff"], svg [fill="#ffffff"], svg [fill="white"] { fill: #1f2937 !important; opacity: 0 !important; } 
+            
+            /* Exception for text - restore white fill for labels if they were hit */
+            text { fill: white !important; opacity: 1 !important; }
         `);
 
         // Selected Sector
@@ -158,9 +181,10 @@ export function StadiumSvg({
                 // Available sectors - teal/cyan color to indicate clickable
                 cssRules.push(`
                     g[data-section-id="${seatId}"] { cursor: pointer !important; pointer-events: auto !important; }
-                    g[data-section-id="${seatId}"] path { fill: rgba(34, 197, 94, 0.7) !important; } /* green-500 */
+                    /* Changed from green-500 to purple-600 to match site theme */
+                    g[data-section-id="${seatId}"] path { fill: rgba(147, 51, 234, 0.7) !important; } 
                     g[data-section-id="${seatId}"]:hover path { 
-                        fill: rgba(168, 85, 247, 0.7) !important; /* purple-500 */
+                        fill: rgba(168, 85, 247, 0.9) !important; /* purple-500 brighter */
                         filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.8));
                         stroke: #fff !important;
                         stroke-width: 2px !important;
@@ -194,10 +218,16 @@ export function StadiumSvg({
         );
     }
 
+    const isWhiteBackgroundMap = ["belgium", "uk", "france"].includes(eventId);
+
     return (
         <div
             ref={containerRef}
-            className="w-full h-full relative"
+            className={cn(
+                "w-full h-full relative",
+                // Force dark background for maps that are inherently white/transparent
+                isWhiteBackgroundMap && "bg-[#1f2937] rounded-xl"
+            )}
             dangerouslySetInnerHTML={{ __html: svgContent }}
         />
     );

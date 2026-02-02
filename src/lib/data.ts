@@ -90,14 +90,15 @@ export const getEventData = (id: string): EventData | null => {
         // Upper tier (500s)
         addOffers(["501", "502", "503", "504", "505", "506", "507", "508", "509", "510", "511", "512", "513", "514", "515", "516", "517", "518", "519", "520", "521", "522", "523", "524", "525", "527", "528", "529", "530"], "Upper Block", "Upper", 240);
         // Floor standing areas (001-003)
-        addOffers(["001", "002", "003"], "Pitch", "Interior", 600);
+        addOffers(["001", "002", "003", "004"], "Pitch", "Interior", 600);
     }
     else if (id === "germany") {
         // Munich (Allianz Arena)
         addOffers(generateRange("", 301, 348), "Block", "Upper", 240);
         addOffers(generateRange("", 201, 247), "Block", "Club", 560);
         addOffers(generateRange("", 101, 136), "Block", "Lower", 700);
-        addOffers(["Zone A", "Zone B", "Zone C", "Zone D"], "Standing", "Interior", 360);
+        // addOffers(["Zone A", "Zone B", "Zone C", "Zone D"], "Standing", "Interior", 360);
+        addOffers(["floor"], "Dance Floor", "Interior", 360);
     }
     else if (id === "belgium") {
         // Brussels - match SVG section IDs (1a, 1b, 2a, 2b, etc.)
