@@ -151,6 +151,14 @@ export function StadiumSvg({
             
             /* Exception for text - restore white fill for labels if they were hit */
             text { fill: white !important; opacity: 1 !important; }
+
+            /* Exception for Stage specific elements */
+            .stage-element, path.stage-element { 
+                fill: #FFFFFF !important; 
+                opacity: 1 !important; 
+                display: inline !important;
+                visibility: visible !important;
+            }
         `);
 
         // Selected Sector
