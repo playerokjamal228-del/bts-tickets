@@ -13,6 +13,10 @@ export default function FAQPage() {
             answer: "All tickets are delivered digitally via Ticketmaster Transfer or the official stadium app (e.g., Stade de France App). Once your purchase is confirmed, you will receive an email with a link to accept your tickets directly into your secure account. This is the safest method to ensure authenticity."
         },
         {
+            question: "How does the Ticketmaster Transfer work?",
+            answer: "It's safe, instant, and official. 1) You receive an email from Ticketmaster with an 'Accept Tickets' link. 2) Click the link and log in to your Ticketmaster account (or create one). 3) The tickets are legally transferred to your name and stay in your account forever. No PDFs, just secure mobile tickets."
+        },
+        {
             question: "Are the tickets authentic?",
             answer: "Yes. We offer a 100% Buyer Guarantee. Every ticket sold on our platform is verified and transferred directly from the original issuer. You are guaranteed entry to the event, or we will provide a full refund of 150% of your order value."
         },

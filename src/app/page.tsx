@@ -4,7 +4,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Calendar, ArrowRight, Sparkles } from "lucide-react";
-import { Reviews } from "@/components/Reviews";
+import { ReviewsCarousel } from "@/components/ReviewsCarousel";
+import { TextReviews } from "@/components/TextReviews";
 import { Footer } from "@/components/Footer";
 import { DateSelectModal } from "@/components/DateSelectModal";
 
@@ -229,7 +230,8 @@ export default function Home() {
       </section>
 
       {/* Reviews Section */}
-      <Reviews />
+      <ReviewsCarousel />
+      <TextReviews />
 
       {/* Footer */}
       <Footer />

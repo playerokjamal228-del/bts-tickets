@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Header } from "@/components/Header";
 import { PixelScripts } from "@/components/PixelScripts";
+import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -29,6 +30,7 @@ export default function RootLayout({
           <PixelScripts />
           <Header />
           {children}
+          <WhatsAppWidget />
         </Providers>
       </body>
     </html>
