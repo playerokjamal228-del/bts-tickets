@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useLanguage } from "@/lib/language-context";
 import { ChevronDown, Star, Euro } from "lucide-react";
+import { ScarcityBanner } from "@/components/ScarcityBanner";
+import { InventoryTimer } from "@/components/InventoryTimer";
 
 import { EventData, TicketOffer } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -136,12 +138,19 @@ export function EventBooking({ event }: EventBookingProps) {
             {/* Right: Ticket Sidebar */}
             <div className="w-full lg:w-[420px] xl:w-[450px] flex flex-col flex-1 lg:flex-none lg:h-[calc(100vh-64px)] bg-secondary shadow-2xl z-20 overflow-hidden">
                 <div className="border-b border-white/10 bg-white/5 backdrop-blur-md shrink-0">
+                    {/* Unique Banner Implementation */}
+                    <ScarcityBanner />
+
                     {/* Header */}
-                    <div className="p-3 sm:p-4 pb-2 flex justify-between items-center">
-                        <h2 className="font-bold flex items-center text-sm">
-                            <span className="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse" />
-                            {t.tickets.title} ({filteredOffers.length})
-                        </h2>
+                    <div className="p-3 sm:p-4 pb-2 flex justify-between items-center bg-black/10">
+                        <div className="flex flex-col gap-1 items-start">
+                            <h2 className="font-bold flex items-center text-sm">
+                                <span className="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse" />
+                                {t.tickets.title} ({filteredOffers.length})
+                            </h2>
+                            <InventoryTimer />
+                        </div>
+
                         <Link href="/checkout">
                             <Button size="sm" variant="default" className="text-xs h-7">
                                 {t.nav.cart}

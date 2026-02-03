@@ -8,6 +8,7 @@ import { ReviewsCarousel } from "@/components/ReviewsCarousel";
 import { TextReviews } from "@/components/TextReviews";
 import { Footer } from "@/components/Footer";
 import { DateSelectModal } from "@/components/DateSelectModal";
+import { ComparisonBlock } from "@/components/ComparisonBlock";
 
 import { useLanguage } from "@/lib/language-context";
 import { useState, useRef } from "react";
@@ -228,6 +229,9 @@ export default function Home() {
           <div className="absolute right-0 top-0 bottom-8 w-12 bg-gradient-to-l from-secondary/80 to-transparent pointer-events-none md:hidden" />
         </div>
       </section>
+
+      {/* Comparison Section */}
+      <ComparisonBlock />
 
       {/* Reviews Section */}
       <ReviewsCarousel />

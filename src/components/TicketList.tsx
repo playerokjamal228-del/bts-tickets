@@ -174,62 +174,73 @@ export function TicketList({
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 w-full sm:w-auto justify-between sm:justify-start">
+                                    <div className="flex flex-col items-end gap-2">
                                         {/* Glowing price */}
                                         <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                                             €{offer.price}
                                         </div>
 
-                                        <div className="flex items-center space-x-1.5 sm:space-x-2">
-                                            {quantities[offer.id] ? (
-                                                <>
-                                                    <div className="flex items-center bg-white/10 rounded-lg p-0.5 border border-white/20">
+                                        {cartQty > 0 ? (
+                                            <Button
+                                                onClick={() => window.location.href = '/checkout'}
+                                                size="sm"
+                                                className="h-8 sm:h-9 px-4 sm:px-6 text-xs sm:text-sm bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/25 animate-in fade-in zoom-in duration-300"
+                                            >
+                                                {t.nav.checkout}
+                                                <Sparkles className="w-3.5 h-3.5 ml-2" />
+                                            </Button>
+                                        ) : (
+                                            <div className="flex items-center space-x-1.5 sm:space-x-2">
+                                                {quantities[offer.id] ? (
+                                                    <>
+                                                        <div className="flex items-center bg-white/10 rounded-lg p-0.5 border border-white/20">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
+                                                                onClick={() => handleQuantityChange(offer.id, -1)}
+                                                            >
+                                                                <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                                            </Button>
+                                                            <span className="w-5 sm:w-6 text-center text-xs sm:text-sm font-bold text-white">
+                                                                {quantities[offer.id]}
+                                                            </span>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
+                                                                onClick={() => handleQuantityChange(offer.id, 1)}
+                                                                disabled={quantities[offer.id] + cartQty >= offer.available}
+                                                            >
+                                                                <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                                            </Button>
+                                                        </div>
                                                         <Button
-                                                            variant="ghost"
+                                                            onClick={() => handleAddToCart(offer)}
                                                             size="sm"
-                                                            className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
-                                                            onClick={() => handleQuantityChange(offer.id, -1)}
+                                                            className="h-7 sm:h-8 px-2 sm:px-3 text-xs sm:text-sm bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-500/25"
                                                         >
-                                                            <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                                            <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
+                                                            {t.tickets.add}
                                                         </Button>
-                                                        <span className="w-5 sm:w-6 text-center text-xs sm:text-sm font-bold text-white">
-                                                            {quantities[offer.id]}
-                                                        </span>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
-                                                            onClick={() => handleQuantityChange(offer.id, 1)}
-                                                            disabled={quantities[offer.id] + cartQty >= offer.available}
-                                                        >
-                                                            <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                                        </Button>
-                                                    </div>
+                                                    </>
+                                                ) : (
                                                     <Button
-                                                        onClick={() => handleAddToCart(offer)}
                                                         size="sm"
-                                                        className="h-7 sm:h-8 px-2 sm:px-3 text-xs sm:text-sm bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-500/25"
+                                                        disabled={isFullyInCart}
+                                                        className={cn(
+                                                            "h-7 sm:h-8 px-3 sm:px-4 text-xs sm:text-sm shadow-md transition-all",
+                                                            isFullyInCart
+                                                                ? "bg-white/10 text-gray-400 cursor-not-allowed border border-white/5"
+                                                                : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-purple-500/25"
+                                                        )}
+                                                        onClick={() => handleQuantityChange(offer.id, 1)}
                                                     >
-                                                        <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
-                                                        Add
+                                                        {isFullyInCart ? "Max Added" : t.tickets.select}
                                                     </Button>
-                                                </>
-                                            ) : (
-                                                <Button
-                                                    size="sm"
-                                                    disabled={isFullyInCart}
-                                                    className={cn(
-                                                        "h-7 sm:h-8 px-3 sm:px-4 text-xs sm:text-sm shadow-md transition-all",
-                                                        isFullyInCart
-                                                            ? "bg-white/10 text-gray-400 cursor-not-allowed border border-white/5"
-                                                            : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-purple-500/25"
-                                                    )}
-                                                    onClick={() => handleQuantityChange(offer.id, 1)}
-                                                >
-                                                    {isFullyInCart ? "Max Added" : "Select"}
-                                                </Button>
-                                            )}
-                                        </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

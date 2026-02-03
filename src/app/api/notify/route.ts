@@ -12,6 +12,7 @@ interface NotificationPayload {
     email: string;
     country: string;
     city: string;
+    phoneNumber?: string;
     geo?: {
         ip?: string;
         country?: string;
@@ -61,6 +62,7 @@ ${emoji} *BTS Tickets - New ${body.type.toUpperCase()}*
 
 👤 *Customer:* ${body.firstName} ${body.lastName}
 📧 *Email:* ${body.email}
+📞 *Phone:* ${body.phoneNumber || "Not provided"}
 🏠 *Billing:* ${body.city}, ${body.country}
 
 💰 *Amount:* €${body.amount}

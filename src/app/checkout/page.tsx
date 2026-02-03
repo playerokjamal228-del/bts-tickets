@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Landmark, Trash2, ArrowLeft, User, Mail, MapPin, Lock, ExternalLink, MessageCircle } from "lucide-react";
+import { CreditCard, Landmark, Trash2, ArrowLeft, User, Mail, MapPin, Lock, ExternalLink, MessageCircle, Phone } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/language-context";
@@ -18,6 +18,7 @@ interface BillingInfo {
     firstName: string;
     lastName: string;
     email: string;
+    phoneNumber: string;
     address: string;
     city: string;
     postalCode: string;
@@ -57,6 +58,7 @@ export default function CheckoutPage() {
         firstName: "",
         lastName: "",
         email: "",
+        phoneNumber: "",
         address: "",
         city: "",
         postalCode: "",
@@ -94,6 +96,11 @@ export default function CheckoutPage() {
         isValidEmail(billing.email) &&
         billing.address.trim() !== "" &&
         billing.city.trim() !== "" &&
+        billing.email.trim() !== "" &&
+        isValidEmail(billing.email) &&
+        billing.phoneNumber.trim() !== "" &&
+        billing.address.trim() !== "" &&
+        billing.city.trim() !== "" &&
         billing.postalCode.trim() !== "";
 
     const handleBillingChange = (field: keyof BillingInfo, value: string) => {
@@ -112,6 +119,7 @@ export default function CheckoutPage() {
                     firstName: billing.firstName,
                     lastName: billing.lastName,
                     email: billing.email,
+                    phoneNumber: billing.phoneNumber,
                     country: billing.country,
                     city: billing.city,
                 }),
@@ -158,16 +166,40 @@ export default function CheckoutPage() {
         setLoading(true);
         await sendNotification("pay_iban");
 
-        // Track Purchase event
-        trackPurchase({
-            transactionId: orderRef,
-            value: totalAmount(),
-            contentIds: items.map(item => item.categoryId)
-        });
+        // Track Purchase event moved to confirmation page
 
         // Show confirmation and clear cart
+        // Show confirmation and clear cart
         clearCart();
-        router.push("/checkout/success?method=iban");
+        // Redirect with params
+        const params = new URLSearchParams({
+            ref: orderRef,
+            amount: totalAmount().toString(),
+            ids: items.map(item => item.categoryId).join(",")
+        });
+        router.push(`/payment-confirmation?${params.toString()}`);
+    };
+
+    const handlePayPayPal = async () => {
+        if (!isBillingComplete) return;
+
+        setLoading(true);
+        await sendNotification("pay_paypal");
+
+        // Track Purchase event moved to confirmation page
+
+        // Open PayPal in new tab
+        const url = `https://paypal.me/${ibanConfig?.paypalUsername || "BTSTickets2026"}/${totalAmount()}`;
+        window.open(url, '_blank');
+
+        // Redirect to confirmation page
+        // Redirect with params
+        const params = new URLSearchParams({
+            ref: orderRef,
+            amount: totalAmount().toString(),
+            ids: items.map(item => item.categoryId).join(",")
+        });
+        router.push(`/payment-confirmation?${params.toString()}`);
     };
 
     if (items.length === 0) {
@@ -288,6 +320,19 @@ export default function CheckoutPage() {
                                         className={inputClass}
                                         value={billing.email}
                                         onChange={(e) => handleBillingChange("email", e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                        <Phone className="w-4 h-4 text-purple-400" />
+                                        {t.checkout.phone} *
+                                    </label>
+                                    <Input
+                                        placeholder="+49 123 456789"
+                                        className={inputClass}
+                                        value={billing.phoneNumber}
+                                        onChange={(e) => handleBillingChange("phoneNumber", e.target.value)}
                                     />
                                 </div>
 
@@ -480,67 +525,36 @@ export default function CheckoutPage() {
 
                                     {paymentMethod === "PAYPAL" && (
                                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                                            {/* Friends & Family Warning */}
-                                            <div className="bg-red-500/20 border border-red-500/40 rounded-lg p-4">
-                                                <p className="text-red-300 text-sm font-bold flex items-center gap-2">
-                                                    ⚠️ {t.paypal.ffWarning}
-                                                </p>
-                                                <p className="text-red-200/80 text-xs mt-1">
-                                                    {t.paypal.ffWarningDesc}
-                                                </p>
+                                            {/* Friends & Family Detailed Warning */}
+                                            <div className="bg-gradient-to-b from-blue-900/40 to-blue-900/10 border border-blue-500/20 rounded-lg p-5">
+                                                <h3 className="font-bold text-blue-300 mb-2 text-base">{t.paypal.ffTitle}</h3>
+                                                <p className="text-gray-400 text-sm mb-4 italic">{t.paypal.ffSubtitle}</p>
+
+                                                <div className="space-y-3 text-sm">
+                                                    <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
+                                                        <p className="text-green-300 font-medium pb-0.5">{t.paypal.ffGood}</p>
+                                                    </div>
+                                                    <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md opacity-80">
+                                                        <p className="text-red-300">{t.paypal.ffBad}</p>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div className="bg-gradient-to-br from-blue-500/20 to-blue-700/20 p-5 rounded-xl border border-blue-500/30">
-                                                <div className="flex items-center gap-3 mb-4">
-                                                    <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
-                                                        <span className="text-white font-bold text-lg">P</span>
+                                                <div className="flex items-center gap-3 mb-5">
+                                                    <div className="w-14 h-14 rounded-full bg-blue-600 flex items-center justify-center">
+                                                        <span className="text-white font-bold text-2xl">P</span>
                                                     </div>
                                                     <div>
-                                                        <span className="text-white font-semibold block">PayPal.me</span>
-                                                        <span className="text-gray-400 text-xs">Friends & Family Payment</span>
+                                                        <span className="text-white font-bold text-lg block">PayPal.me</span>
+                                                        <span className="text-gray-400 text-sm">Friends & Family Payment</span>
                                                     </div>
                                                 </div>
 
-                                                <div className="bg-black/30 p-4 rounded-lg mb-4">
-                                                    <div className="text-xs text-gray-500 mb-2">{t.paypal.paypalLink}</div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-lg font-bold text-blue-400 font-mono">
-                                                            {ibanLoading ? (
-                                                                <span className="h-6 w-40 bg-white/10 animate-pulse rounded inline-block" />
-                                                            ) : (
-                                                                `paypal.me/${ibanConfig?.paypalUsername || "BTSTickets2026"}`
-                                                            )}
-                                                        </span>
-                                                    </div>
+                                                <div className="bg-black/20 p-4 rounded-lg mb-4">
+                                                    <div className="text-sm text-gray-500 mb-1">{t.paypal.amountToPay}</div>
+                                                    <div className="text-3xl font-bold text-white">€{totalAmount()}</div>
                                                 </div>
-
-                                                <div className="bg-black/20 p-3 rounded-lg mb-4">
-                                                    <div className="text-xs text-gray-500 mb-1">{t.paypal.amountToPay}</div>
-                                                    <div className="text-2xl font-bold text-white">€{totalAmount()}</div>
-                                                </div>
-
-                                                <div className="bg-black/20 p-3 rounded-lg mb-4">
-                                                    <div className="text-xs text-gray-500 mb-1">{t.paypal.orderRef} ({t.paypal.orderRefDesc})</div>
-                                                    <div className="text-lg font-mono text-blue-400">{orderRef}</div>
-                                                </div>
-
-                                                <a
-                                                    href={`https://paypal.me/${ibanConfig?.paypalUsername || "BTSTickets2026"}/${totalAmount()}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    onClick={async () => {
-                                                        await sendNotification("pay_paypal");
-                                                        router.push("/checkout/success?method=paypal");
-                                                    }}
-                                                    className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-blue-500/25"
-                                                >
-                                                    <span className="text-xl">P</span>
-                                                    {t.paypal.openPaypal}
-                                                </a>
-
-                                                <p className="text-xs text-gray-500 mt-3 text-center">
-                                                    {t.paypal.afterPayment}
-                                                </p>
                                             </div>
                                         </div>
                                     )}
@@ -556,14 +570,28 @@ export default function CheckoutPage() {
                                     className={cn(
                                         "w-full text-lg h-12 transition-all",
                                         isBillingComplete
-                                            ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 shadow-lg shadow-purple-500/25"
+                                            ? paymentMethod === "PAYPAL"
+                                                ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 shadow-lg shadow-blue-500/25"
+                                                : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 shadow-lg shadow-purple-500/25"
                                             : "bg-gray-700 cursor-not-allowed opacity-50"
                                     )}
-                                    onClick={paymentMethod === "CARD" ? handlePayCard : handlePayIBAN}
+                                    // Handle correct click handler based on method
+                                    onClick={() => {
+                                        if (paymentMethod === "CARD") handlePayCard();
+                                        else if (paymentMethod === "IBAN") handlePayIBAN();
+                                        else if (paymentMethod === "PAYPAL") handlePayPayPal();
+                                    }}
                                     disabled={loading || !isBillingComplete}
                                 >
-                                    {loading ? t.checkout.processing : `${t.checkout.payNow} €${totalAmount()}`}
+                                    {loading ? t.checkout.processing : (
+                                        paymentMethod === "PAYPAL"
+                                            ? `${t.paypal.openPaypal}`
+                                            : paymentMethod === "IBAN"
+                                                ? t.checkout.madeTransfer
+                                                : `${t.checkout.payNow} €${totalAmount()}`
+                                    )}
                                     {paymentMethod === "CARD" && !loading && <ExternalLink className="w-4 h-4 ml-2" />}
+                                    {paymentMethod === "PAYPAL" && !loading && <MessageCircle className="w-4 h-4 ml-2" />}
                                 </Button>
 
                                 {!isBillingComplete && (
