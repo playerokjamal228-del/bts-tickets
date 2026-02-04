@@ -174,10 +174,18 @@ export function TicketList({
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col items-end gap-2">
+                                    <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 w-full sm:w-auto justify-between sm:justify-start">
                                         {/* Glowing price */}
-                                        <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                            €{offer.price}
+                                        {/* Glowing price */}
+                                        <div className="flex flex-col items-end sm:items-end">
+                                            {offer.compareAt && (
+                                                <span className="text-xs sm:text-sm text-gray-400 line-through decoration-red-500/50 decoration-2 mb-[-2px]">
+                                                    €{offer.compareAt}
+                                                </span>
+                                            )}
+                                            <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                                €{offer.price}
+                                            </div>
                                         </div>
 
                                         {cartQty > 0 ? (

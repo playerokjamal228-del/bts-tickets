@@ -105,6 +105,7 @@ export interface Translations {
         fillRequired: string;
         emptyCart: string;
         browseTickets: string;
+        ticketsReserved: string;
     };
     // Footer
     footer: {
@@ -226,6 +227,7 @@ export interface Translations {
             a10: string;
         };
         stillQuestions: string;
+
         supportTeam: string;
     };
 }
@@ -328,6 +330,7 @@ export const translations: Record<Language, Translations> = {
             fillRequired: "Please fill in all required fields to continue",
             emptyCart: "Your Cart is Empty",
             browseTickets: "Browse Tickets",
+            ticketsReserved: "Tickets are reserved for:",
         },
         footer: {
             slogan: "The Purple Ocean awaits.",
@@ -540,6 +543,7 @@ export const translations: Record<Language, Translations> = {
             fillRequired: "Bitte füllen Sie alle erforderlichen Felder aus",
             emptyCart: "Ihr Warenkorb ist leer",
             browseTickets: "Tickets durchsuchen",
+            ticketsReserved: "Tickets sind reserviert für:",
         },
         footer: {
             slogan: "Der lila Ozean wartet.",
@@ -752,6 +756,7 @@ export const translations: Record<Language, Translations> = {
             fillRequired: "Por favor completa todos los campos requeridos",
             emptyCart: "Tu Carrito está Vacío",
             browseTickets: "Ver Entradas",
+            ticketsReserved: "Las entradas están reservadas por:",
         },
         footer: {
             slogan: "El océano púrpura te espera.",
@@ -964,6 +969,7 @@ export const translations: Record<Language, Translations> = {
             fillRequired: "Veuillez remplir tous les champs obligatoires",
             emptyCart: "Votre Panier est Vide",
             browseTickets: "Parcourir les Billets",
+            ticketsReserved: "Les billets sont réservés pendant :",
         },
         footer: {
             slogan: "L'océan violet vous attend.",

@@ -6,6 +6,7 @@ export interface TicketOffer {
     price: number;
     available: number;
     type: string;
+    compareAt?: number;
 }
 
 export interface EventData {
@@ -55,7 +56,16 @@ export const getEventData = (id: string): EventData | null => {
     const addOffers = (blocks: string[], sectorName: string, type: string, price: number) => {
         blocks.forEach((block, i) => {
             // For interior/standing, just one "row" usually
-            const rows = type === "Interior" ? ["GA"] : [10, 25, 40];
+            // Randomize rows between 5 and 55 for seated sections
+            const rows = type === "Interior"
+                ? ["GA"]
+                : (() => {
+                    const uniqueRows = new Set<number>();
+                    while (uniqueRows.size < 3) {
+                        uniqueRows.add(Math.floor(Math.random() * (55 - 5 + 1)) + 5);
+                    }
+                    return Array.from(uniqueRows).sort((a, b) => a - b);
+                })();
 
             // Deterministic "Sold Out" logic:
             // Mark ~30% of blocks as sold out (e.g. every 3rd block)
@@ -75,7 +85,8 @@ export const getEventData = (id: string): EventData | null => {
                     row: typeof r === 'number' ? `Row ${r}` : r,
                     price: price - (idx * 10),
                     available: available,
-                    type: type
+                    type: type,
+                    compareAt: undefined
                 });
             });
         });
@@ -93,11 +104,31 @@ export const getEventData = (id: string): EventData | null => {
         addOffers(["001", "002", "003", "004"], "Pitch", "Interior", 360);
     }
     else if (id === "germany") {
-        // Munich (Allianz Arena) - Start ~160, Avg 230-260
-        addOffers(generateRange("", 301, 348), "Block", "Upper", 180); // Start range ~160 after row discount
-        addOffers(generateRange("", 201, 247), "Block", "Club", 260);
-        addOffers(generateRange("", 101, 136), "Block", "Lower", 320);
-        addOffers(["floor"], "Dance Floor", "Interior", 250);
+        // Munich (Allianz Arena) - ALL SECTORS
+
+        // Upper tier (300s) -> €295 (300-339), €275 (340-349)
+        addOffers(generateRange("", 301, 339), "Block", "Upper", 295);
+        addOffers(generateRange("", 340, 348), "Block", "Upper", 275); // Ends at 348 per map
+
+        // Club tier (200s) -> €360 (200-219, 230-249), €325 (220-229)
+        addOffers(generateRange("", 201, 219), "Block", "Club", 360);
+        addOffers(generateRange("", 220, 229), "Block", "Club", 325);
+        addOffers(generateRange("", 230, 247), "Block", "Club", 360); // Ends at 247 per map
+
+        // Lower tier (100s) -> €420
+        addOffers(generateRange("", 101, 136), "Block", "Lower", 420);
+
+        // VIP / Loge sections
+        addOffers(["loge"], "Loge", "VIP", 450);
+        addOffers(["ehrentribune"], "Ehrentribüne", "VIP", 500);
+
+        // Podium sections - Added missing sections
+        addOffers(["p101", "p102", "p103", "p104", "p105", "p106", "p303", "p304"], "Podium", "Premium", 380);
+
+
+
+        // Floor standing - Corrected typo
+        addOffers(["innenraum"], "INNENRAUM STEHPLATZ", "Interior", 245);
     }
     else if (id === "belgium") {
         // Brussels - Start ~110, Avg 200-210
@@ -146,47 +177,48 @@ export const getEventData = (id: string): EventData | null => {
         addOffers(["322-b"], "Sector", "Middle", 150);
     }
     else if (id === "france") {
-        // Paris (Stade de France) - Using actual SVG section IDs with alphanumeric format - Reduce density by 50%
-        // Start from 90, Avg 180
+        // Paris (Stade de France) - Reverted to flat pricing + 25% increase
+        // Start from ~140 (was 110), Avg ~225 (was 180)
 
-        // A sections (Upper)
-        addOffers(filterHalf(["a-1", "a-2", "a-3", "a-4", "a-5", "a-6", "a-9", "a-10", "a-11", "a-12"]), "Section A", "Upper", 140);
-        // B sections (Upper) - Cheapest
-        addOffers(filterHalf(["b-1", "b-2", "b-3", "b-4", "b-5", "b-6", "b-7", "b-8", "b-11", "b-12"]), "Section B", "Upper", 130);
-        // C sections (Middle)
-        addOffers(filterHalf(["c-3", "c-4", "c-5", "c-6", "c-7", "c-8", "c-9", "c-10"]), "Section C", "Middle", 170);
-        // D sections (Middle)
-        addOffers(filterHalf(["d-1", "d-2", "d-4", "d-5", "d-6", "d-7", "d-8", "d-9"]), "Section D", "Middle", 180);
-        // E sections (Lower)
-        addOffers(filterHalf(["e-1", "e-2", "e-3", "e-4", "e-5", "e-6", "e-9", "e-10", "e-11", "e-12", "e-13", "e-14"]), "Section E", "Lower", 220);
-        // G sections (Lower)
-        addOffers(filterHalf(["g-1", "g-2", "g-3", "g-4", "g-5", "g-6", "g-7", "g-8"]), "Section G", "Lower", 210);
-        // H sections (all h sections from SVG)
-        addOffers(filterHalf(["h-1", "h-2", "h-3", "h-4", "h-5", "h-6", "h-7", "h-8", "h-11", "h-12"]), "Section H", "Premium", 260);
-        // J sections (all j sections from SVG)
-        addOffers(filterHalf(["j-1", "j-2", "j-3", "j-4", "j-5", "j-6", "j-7", "j-8", "j-9", "j-10"]), "Section J", "Premium", 280);
-        // K sections (all k sections from SVG)
-        addOffers(filterHalf(["k-1", "k-2", "k-3", "k-4", "k-7", "k-8", "k-9", "k-10"]), "Section K", "Premium", 290);
-        // L sections (all l sections from SVG)
-        addOffers(filterHalf(["l-1", "l-2", "l-3", "l-4", "l-5", "l-6", "l-9", "l-10", "l-11", "l-12", "l-13", "l-14", "l-15", "l-16", "l-17", "l-18"]), "Section L", "Club", 350);
-        // N sections (all n sections from SVG)
-        addOffers(filterHalf(["n-3", "n-4", "n-5", "n-6", "n-9", "n-10", "n-11", "n-12", "n-13", "n-14", "n-15", "n-16", "n-17", "n-18"]), "Section N", "Premium", 300);
-        // R sections (all r sections from SVG)
-        addOffers(filterHalf(["r-1", "r-2", "r-3", "r-4", "r-5", "r-6", "r-9", "r-10", "r-11", "r-12", "r-13", "r-14", "r-15"]), "Section R", "Club", 340);
-        // S sections (all s sections from SVG) - Cheapest ~110-120 start
-        addOffers(filterHalf(["s-1", "s-2", "s-3", "s-4", "s-5", "s-6", "s-7", "s-8", "s-12", "s-13", "s-14", "s-15", "s-16", "s-17", "s-18"]), "Section S", "Lower", 130);
-        // T sections (all t sections from SVG)
-        addOffers(filterHalf(["t-1", "t-2", "t-3", "t-5", "t-6", "t-7", "t-8", "t-9", "t-10", "t-11"]), "Section T", "Lower", 140);
-        // U sections (all u sections from SVG)
-        addOffers(filterHalf(["u-1", "u-2", "u-3", "u-4", "u-5", "u-6", "u-7", "u-8", "u-9", "u-11", "u-12", "u-13", "u-14", "u-17", "u-18", "u-19", "u-20", "u-21", "u-22"]), "Section U", "Lower", 130);
-        // X sections (all x sections from SVG) - Upper
-        addOffers(filterHalf(["x-2", "x-3", "x-4", "x-5", "x-8", "x-9", "x-10", "x-11", "x-12", "x-13", "x-14", "x-15"]), "Section X", "Upper", 120);
-        // Y sections (all y sections from SVG) - Start ~95
-        addOffers(filterHalf(["y-1", "y-2", "y-3", "y-4", "y-5", "y-6", "y-7", "y-8", "y-9", "y-10", "y-13", "y-14", "y-15", "y-16"]), "Section Y", "Upper", 110);
-        // Z sections (all z sections from SVG) - Cheapest ~90
-        addOffers(filterHalf(["z-1", "z-2", "z-3", "z-4", "z-5", "z-6", "z-7", "z-8", "z-9", "z-10", "z-11", "z-12", "z-13", "z-14"]), "Section Z", "Upper", 110);
-        // PELOUSE - Dance floor/Pitch area - Keep Available
-        addOffers(["pel"], "Pelouse", "Interior", 350);
+        // A sections (Upper) - 140 * 1.25 = 175
+        addOffers(filterHalf(["a-1", "a-2", "a-3", "a-4", "a-5", "a-6", "a-9", "a-10", "a-11", "a-12"]), "Section A", "Upper", 175);
+        // B sections (Upper) - 130 * 1.25 = 165
+        addOffers(filterHalf(["b-1", "b-2", "b-3", "b-4", "b-5", "b-6", "b-7", "b-8", "b-11", "b-12"]), "Section B", "Upper", 165);
+        // C sections (Middle) - 170 * 1.25 = 215
+        addOffers(filterHalf(["c-3", "c-4", "c-5", "c-6", "c-7", "c-8", "c-9", "c-10"]), "Section C", "Middle", 215);
+        // D sections (Middle) - 180 * 1.25 = 225
+        addOffers(filterHalf(["d-1", "d-2", "d-4", "d-5", "d-6", "d-7", "d-8", "d-9"]), "Section D", "Middle", 225);
+        // E sections (Lower) - 220 * 1.25 = 275
+        addOffers(filterHalf(["e-1", "e-2", "e-3", "e-4", "e-5", "e-6", "e-9", "e-10", "e-11", "e-12", "e-13", "e-14"]), "Section E", "Lower", 275);
+        // G sections (Lower) - 210 * 1.25 = 265
+        addOffers(filterHalf(["g-1", "g-2", "g-3", "g-4", "g-5", "g-6", "g-7", "g-8"]), "Section G", "Lower", 265);
+        // H sections (Premium) - 260 * 1.25 = 325
+        addOffers(filterHalf(["h-1", "h-2", "h-3", "h-4", "h-5", "h-6", "h-7", "h-8", "h-11", "h-12"]), "Section H", "Premium", 325);
+        // J sections - 280 * 1.25 = 350
+        addOffers(filterHalf(["j-1", "j-2", "j-3", "j-4", "j-5", "j-6", "j-7", "j-8", "j-9", "j-10"]), "Section J", "Premium", 350);
+        // K sections - 290 * 1.25 = 365
+        addOffers(filterHalf(["k-1", "k-2", "k-3", "k-4", "k-7", "k-8", "k-9", "k-10"]), "Section K", "Premium", 365);
+        // L sections (Club) - 350 * 1.25 = 440
+        addOffers(filterHalf(["l-1", "l-2", "l-3", "l-4", "l-5", "l-6", "l-9", "l-10", "l-11", "l-12", "l-13", "l-14", "l-15", "l-16", "l-17", "l-18"]), "Section L", "Club", 440);
+        // N sections - 300 * 1.25 = 375
+        addOffers(filterHalf(["n-3", "n-4", "n-5", "n-6", "n-9", "n-10", "n-11", "n-12", "n-13", "n-14", "n-15", "n-16", "n-17", "n-18"]), "Section N", "Premium", 375);
+        // R sections (Club) - 340 * 1.25 = 425
+        addOffers(filterHalf(["r-1", "r-2", "r-3", "r-4", "r-5", "r-6", "r-9", "r-10", "r-11", "r-12", "r-13", "r-14", "r-15"]), "Section R", "Club", 425);
+        // S sections (Lower) - 130 * 1.25 = 165
+        addOffers(filterHalf(["s-1", "s-2", "s-3", "s-4", "s-5", "s-6", "s-7", "s-8", "s-12", "s-13", "s-14", "s-15", "s-16", "s-17", "s-18"]), "Section S", "Lower", 165);
+        // T sections (Lower) - 140 * 1.25 = 175
+        addOffers(filterHalf(["t-1", "t-2", "t-3", "t-5", "t-6", "t-7", "t-8", "t-9", "t-10", "t-11"]), "Section T", "Lower", 175);
+        // U sections (Lower) - 130 * 1.25 = 165
+        addOffers(filterHalf(["u-1", "u-2", "u-3", "u-4", "u-5", "u-6", "u-7", "u-8", "u-9", "u-11", "u-12", "u-13", "u-14", "u-17", "u-18", "u-19", "u-20", "u-21", "u-22"]), "Section U", "Lower", 165);
+        // X sections (Upper) - 120 * 1.25 = 150
+        addOffers(filterHalf(["x-2", "x-3", "x-4", "x-5", "x-8", "x-9", "x-10", "x-11", "x-12", "x-13", "x-14", "x-15"]), "Section X", "Upper", 150);
+        // Y sections (Upper) - 110 * 1.25 = 140
+        addOffers(filterHalf(["y-1", "y-2", "y-3", "y-4", "y-5", "y-6", "y-7", "y-8", "y-9", "y-10", "y-13", "y-14", "y-15", "y-16"]), "Section Y", "Upper", 140);
+        // Z sections (Upper) - 110 * 1.25 = 140
+        addOffers(filterHalf(["z-1", "z-2", "z-3", "z-4", "z-5", "z-6", "z-7", "z-8", "z-9", "z-10", "z-11", "z-12", "z-13", "z-14"]), "Section Z", "Upper", 140);
+
+        // PELOUSE - Dance floor/Pitch area - 350 * 1.25 = 440
+        addOffers(["pel"], "Pelouse", "Interior", 440);
     }
     else {
         // Generic fallback

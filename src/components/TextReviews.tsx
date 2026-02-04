@@ -89,7 +89,7 @@ export function TextReviews() {
                             </div>
 
                             <p className="text-gray-300 text-sm leading-relaxed mb-6 min-h-[80px]">
-                                "{review.text}"
+                                &quot;{review.text}&quot;
                             </p>
 
                             <div className="flex justify-between items-end border-t border-white/5 pt-4">

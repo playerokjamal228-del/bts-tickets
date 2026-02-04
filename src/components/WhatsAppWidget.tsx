@@ -8,6 +8,7 @@ export function WhatsAppWidget() {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         setMounted(true);
         // Fetch dynamic number if available
         fetch('/api/admin/update-iban')

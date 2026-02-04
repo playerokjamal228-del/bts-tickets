@@ -10,6 +10,7 @@ export function PixelScripts() {
 
     useEffect(() => {
         const cfg = getPixelConfig();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         setConfig({ facebookPixelId: cfg.facebookPixelId, googleAdsId: cfg.googleAdsId });
     }, []);
 

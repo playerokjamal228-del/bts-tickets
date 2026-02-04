@@ -24,6 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
             description: `Join the purple ocean at ${event.stadium}!`,
             images: [`/cities/${event.city.toLowerCase()}.png`],
         },
+        robots: {
+            index: false,
+            follow: false,
+            googleBot: {
+                index: false,
+                follow: false,
+            },
+        },
     };
 }
 
@@ -35,40 +43,8 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
         notFound();
     }
 
-    // JSON-LD Structured Data
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'Event',
-        name: `BTS Tour 2026 - ${event.city}`,
-        startDate: '2026-07-01T19:00', // Approximate
-        location: {
-            '@type': 'Place',
-            name: event.stadium,
-            address: {
-                '@type': 'PostalAddress',
-                addressLocality: event.city,
-                addressCountry: event.country
-            }
-        },
-        image: [
-            `https://bts-tour.com/cities/${event.city.toLowerCase()}.png`
-        ],
-        description: `BTS World Tour 2026 live in ${event.city} at ${event.stadium}.`,
-        offers: {
-            '@type': 'AggregateOffer',
-            lowPrice: '100',
-            priceCurrency: 'EUR',
-            availability: 'https://schema.org/InStock',
-            url: `https://bts-tour.com/event/${id}`
-        }
-    };
-
     return (
         <div className="min-h-screen bg-secondary flex flex-col">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
             <EventBooking event={event} />
             <div className="mt-auto">
                 <Footer />

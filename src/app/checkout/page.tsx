@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Landmark, Trash2, ArrowLeft, User, Mail, MapPin, Lock, ExternalLink, MessageCircle, Phone } from "lucide-react";
+import { CreditCard, Landmark, Trash2, ArrowLeft, User, Mail, MapPin, Lock, ExternalLink, MessageCircle, Phone, Clock } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/language-context";
@@ -38,6 +38,22 @@ export default function CheckoutPage() {
     const { t } = useLanguage();
 
     const [mounted, setMounted] = useState(false);
+
+    // Checkout Timer (10 minutes)
+    const [timeLeft, setTimeLeft] = useState(600);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
 
     // Track InitiateCheckout on mount
     useEffect(() => {
@@ -238,6 +254,17 @@ export default function CheckoutPage() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                {/* Reservation Timer */}
+                                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 flex items-center justify-between mb-4 animate-pulse">
+                                    <div className="flex items-center gap-2 text-yellow-200 text-sm font-medium">
+                                        <Clock className="w-4 h-4" />
+                                        <span>{t.checkout.ticketsReserved}</span>
+                                    </div>
+                                    <div className="font-mono font-bold text-yellow-400 text-lg">
+                                        {formatTime(timeLeft)}
+                                    </div>
+                                </div>
+
                                 {items.map((item) => (
                                     <div
                                         key={`${item.categoryId}-${item.date}`}

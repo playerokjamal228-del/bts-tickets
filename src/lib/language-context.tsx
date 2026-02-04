@@ -20,10 +20,9 @@ const LanguageContext = createContext<LanguageContextType>(defaultContext);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
     const [language, setLanguageState] = useState<Language>('en');
-    const [mounted, setMounted] = useState(false);
+
 
     useEffect(() => {
-        setMounted(true);
         // Try to get language from localStorage or browser
         try {
             const saved = localStorage.getItem('bts-language') as Language | null;

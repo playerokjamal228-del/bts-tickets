@@ -14,6 +14,10 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "BTS Europe Tour 2026",
   description: "Official Ticket Sales for BTS Europe Tour",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 import { CookieBanner } from "@/components/CookieBanner";

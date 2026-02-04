@@ -108,6 +108,8 @@ export function EventBooking({ event }: EventBookingProps) {
         <div className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-secondary text-white overflow-hidden">
             {/* Left: Interactive Map */}
             <div className="w-full h-[35vh] sm:h-[40vh] lg:h-auto lg:flex-1 bg-zinc-900/50 relative border-b lg:border-b-0 lg:border-r border-white/10 shrink-0">
+                {/* FOMO Popup */}
+
                 <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 pointer-events-none">
                     <h1 className="text-xl sm:text-2xl font-bold">{event.city}</h1>
                     <p className="text-xs sm:text-sm text-gray-400">{event.stadium}</p>
