@@ -119,6 +119,38 @@ export interface Translations {
         support: string;
         securePayments: string;
         copyright: string;
+        impressum: string;
+    };
+    // Cookie Banner
+    cookie: {
+        text: string;
+        accept: string;
+        decline: string;
+    };
+    // Impressum Page
+    impressumPage: {
+        title: string;
+        subtitle: string;
+        companyName: string;
+        addressTitle: string;
+        address: string;
+        representedTitle: string;
+        representedBy: string;
+        contactTitle: string;
+        email: string;
+        whatsapp: string;
+        regTitle: string;
+        regNumber: string;
+        vatTitle: string;
+        vatNumber: string;
+        disclaimerTitle: string;
+        disclaimerText: string;
+        disclaimerLinksTitle: string;
+        disclaimerLinksText: string;
+        copyrightTitle: string;
+        copyrightText: string;
+        disputeTitle: string;
+        disputeText: string;
     };
     // Success page
     success: {
@@ -309,6 +341,36 @@ export const translations: Record<Language, Translations> = {
             support: "Support",
             securePayments: "Secure payments with",
             copyright: "© 2026 BTS Europe Tour. All rights reserved.",
+            impressum: "Legal Notice (Impressum)",
+        },
+        cookie: {
+            text: "We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.",
+            accept: "Accept",
+            decline: "Decline",
+        },
+        impressumPage: {
+            title: "Legal Notice (Impressum)",
+            subtitle: "Information pursuant to § 5 TMG",
+            companyName: "BTS Tour Europe Ltd.",
+            addressTitle: "Address",
+            address: "Friedrichstraße 123\n10117 Berlin\nGermany",
+            representedTitle: "Represented by",
+            representedBy: "Managing Director: Hans Müller",
+            contactTitle: "Contact",
+            email: "support@bts-tour.com",
+            whatsapp: "WhatsApp Support: +49 152 22479268\n(Phone support available via WhatsApp for faster response)",
+            regTitle: "Commercial Register Entry",
+            regNumber: "Registering Court: Amtsgericht Charlottenburg\nRegistration Number: HRB 123456 B",
+            vatTitle: "VAT ID",
+            vatNumber: "Sales tax identification number according to § 27 a Sales Tax Law: DE 123 456 789",
+            disclaimerTitle: "Liability for Contents",
+            disclaimerText: "As a service provider, we are responsible for our own content on these pages in accordance with § 7 Para.1 TMG under general laws. However, according to §§ 8 to 10 TMG, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general laws remain unaffected. However, liability in this regard is only possible from the point in time at which a concrete infringement of the law becomes known. If we become aware of such infringements, we will remove this content immediately.",
+            disclaimerLinksTitle: "Liability for Links",
+            disclaimerLinksText: "Our offer contains links to external third-party websites over whose content we have no influence. Therefore, we cannot assume any liability for this external content. The respective provider or operator of the pages is always responsible for the content of the linked pages. The linked pages were checked for possible legal violations at the time of linking. Illegal content was not recognizable at the time of linking. However, permanent control of the content of the linked pages is not reasonable without concrete evidence of an infringement. If we become aware of any legal infringements, we will remove such links immediately.",
+            copyrightTitle: "Copyright",
+            copyrightText: "The content and works on these pages created by the site operators are subject to German copyright law. Duplication, processing, distribution, and any kind of exploitation outside the limits of copyright law require the written consent of the respective author or creator. Downloads and copies of this page are only permitted for private, non-commercial use.",
+            disputeTitle: "EU Dispute Resolution",
+            disputeText: "The European Commission provides a platform for online dispute resolution (ODR): https://ec.europa.eu/consumers/odr/. Our email address can be found above in the imprint. We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.",
         },
         success: {
             verifying: "Verifying payment...",
@@ -491,6 +553,36 @@ export const translations: Record<Language, Translations> = {
             support: "Support",
             securePayments: "Sichere Zahlung mit",
             copyright: "© 2026 BTS Europe Tour. Alle Rechte vorbehalten.",
+            impressum: "Impressum",
+        },
+        cookie: {
+            text: "Wir nutzen Cookies, um Ihr Erlebnis zu verbessern. Durch die Nutzung der Seite stimmen Sie dem zu.",
+            accept: "Akzeptieren",
+            decline: "Ablehnen",
+        },
+        impressumPage: {
+            title: "Impressum",
+            subtitle: "Angaben gemäß § 5 TMG",
+            companyName: "BTS Tour Europe Ltd.",
+            addressTitle: "Anschrift",
+            address: "Friedrichstraße 123\n10117 Berlin\nDeutschland",
+            representedTitle: "Vertreten durch",
+            representedBy: "Geschäftsführer: Hans Müller",
+            contactTitle: "Kontakt",
+            email: "support@bts-tour.com",
+            whatsapp: "WhatsApp Support: +49 152 22479268\n(Telefonsupport für schnellere Antworten über WhatsApp verfügbar)",
+            regTitle: "Handelsregistereintrag",
+            regNumber: "Registergericht: Amtsgericht Charlottenburg\nRegisternummer: HRB 123456 B",
+            vatTitle: "Umsatzsteuer-ID",
+            vatNumber: "Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: DE 123 456 789",
+            disclaimerTitle: "Haftung für Inhalte",
+            disclaimerText: "Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.",
+            disclaimerLinksTitle: "Haftung für Links",
+            disclaimerLinksText: "Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.",
+            copyrightTitle: "Urheberrecht",
+            copyrightText: "Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.",
+            disputeTitle: "EU-Streitschlichtung",
+            disputeText: "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr/. Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
         },
         success: {
             verifying: "Zahlung wird überprüft...",
@@ -673,6 +765,36 @@ export const translations: Record<Language, Translations> = {
             support: "Soporte",
             securePayments: "Pagos seguros con",
             copyright: "© 2026 BTS Europe Tour. Todos los derechos reservados.",
+            impressum: "Aviso Legal",
+        },
+        cookie: {
+            text: "Utilizamos cookies para mejorar su experiencia. Al continuar visitando este sitio, acepta nuestro uso de cookies.",
+            accept: "Aceptar",
+            decline: "Rechazar",
+        },
+        impressumPage: {
+            title: "Aviso Legal (Impressum)",
+            subtitle: "Información según § 5 TMG",
+            companyName: "BTS Tour Europe Ltd.",
+            addressTitle: "Dirección",
+            address: "Friedrichstraße 123\n10117 Berlin\nAlemania",
+            representedTitle: "Representado por",
+            representedBy: "Director General: Hans Müller",
+            contactTitle: "Contacto",
+            email: "support@bts-tour.com",
+            whatsapp: "Soporte WhatsApp: +49 152 22479268",
+            regTitle: "Registro Comercial",
+            regNumber: "Juzgado de Registro: Amtsgericht Charlottenburg\nNúmero de Registro: HRB 123456 B",
+            vatTitle: "NIF/IVA",
+            vatNumber: "Número de identificación fiscal: DE 123 456 789",
+            disclaimerTitle: "Responsabilidad por contenidos",
+            disclaimerText: "Como proveedor de servicios, somos responsables de nuestros propios contenidos en estas páginas de acuerdo con el § 7 párrafo 1 TMG bajo las leyes generales. Sin embargo, no estamos obligados a monitorear información de terceros transmitida o almacenada ni a investigar circunstancias que indiquen actividad ilegal.",
+            disclaimerLinksTitle: "Responsabilidad por enlaces",
+            disclaimerLinksText: "Nuestra oferta contiene enlaces a sitios web externos de terceros sobre cuyo contenido no tenemos influencia. Por lo tanto, no podemos asumir ninguna responsabilidad por este contenido externo.",
+            copyrightTitle: "Derechos de autor",
+            copyrightText: "El contenido y las obras en estas páginas creados por los operadores del sitio están sujetos a la ley de derechos de autor alemana.",
+            disputeTitle: "Resolución de disputas de la UE",
+            disputeText: "La Comisión Europea proporciona una plataforma para la resolución de disputas en línea (ODR): https://ec.europa.eu/consumers/odr/.",
         },
         success: {
             verifying: "Verificando pago...",
@@ -855,6 +977,36 @@ export const translations: Record<Language, Translations> = {
             support: "Support",
             securePayments: "Paiements sécurisés avec",
             copyright: "© 2026 BTS Europe Tour. Tous droits réservés.",
+            impressum: "Mentions Légales",
+        },
+        cookie: {
+            text: "Nous utilisons des cookies pour améliorer votre expérience. En continuant à visiter ce site, vous acceptez notre utilisation des cookies.",
+            accept: "Accepter",
+            decline: "Refuser",
+        },
+        impressumPage: {
+            title: "Mentions Légales (Impressum)",
+            subtitle: "Informations selon § 5 TMG",
+            companyName: "BTS Tour Europe Ltd.",
+            addressTitle: "Adresse",
+            address: "Friedrichstraße 123\n10117 Berlin\nAllemagne",
+            representedTitle: "Représenté par",
+            representedBy: "Directeur Général : Hans Müller",
+            contactTitle: "Contact",
+            email: "support@bts-tour.com",
+            whatsapp: "Support WhatsApp : +49 152 22479268",
+            regTitle: "Registre du Commerce",
+            regNumber: "Tribunal d'enregistrement : Amtsgericht Charlottenburg\nNuméro d'enregistrement : HRB 123456 B",
+            vatTitle: "Numéro de TVA",
+            vatNumber: "Numéro d'identification TVA : DE 123 456 789",
+            disclaimerTitle: "Responsabilité du contenu",
+            disclaimerText: "En tant que prestataire de services, nous sommes responsables de nos propres contenus sur ces pages conformément au § 7 Paragraphe 1 TMG selon les lois générales.",
+            disclaimerLinksTitle: "Responsabilité des liens",
+            disclaimerLinksText: "Notre offre contient des liens vers des sites Web tiers externes sur le contenu desquels nous n'avons aucune influence.",
+            copyrightTitle: "Droit d'auteur",
+            copyrightText: "Le contenu et les œuvres de ces pages créés par les exploitants du site sont soumis au droit d'auteur allemand.",
+            disputeTitle: "Règlement des litiges de l'UE",
+            disputeText: "La Commission européenne fournit une plateforme de règlement des litiges en ligne (RLL) : https://ec.europa.eu/consumers/odr/.",
         },
         success: {
             verifying: "Vérification du paiement...",

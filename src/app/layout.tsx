@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description: "Official Ticket Sales for BTS Europe Tour",
 };
 
+import { CookieBanner } from "@/components/CookieBanner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,6 +33,7 @@ export default function RootLayout({
           <Header />
           {children}
           <WhatsAppWidget />
+          <CookieBanner />
         </Providers>
       </body>
     </html>

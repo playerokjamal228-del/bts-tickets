@@ -39,7 +39,7 @@ export function Footer() {
                         <ul className="space-y-3">
                             <li><Link href="/" className="text-gray-500 hover:text-white transition-colors text-sm">{t.nav.events}</Link></li>
                             <li><Link href="/checkout" className="text-gray-500 hover:text-white transition-colors text-sm">{t.nav.cart}</Link></li>
-                            <li><a href="mailto:support@bts-tour.eu" className="text-gray-500 hover:text-white transition-colors text-sm">{t.footer.support}</a></li>
+                            <li><a href="mailto:support@bts-tour.com" className="text-gray-500 hover:text-white transition-colors text-sm">{t.footer.support}</a></li>
                         </ul>
                     </div>
 
@@ -47,6 +47,7 @@ export function Footer() {
                     <div>
                         <h4 className="text-white font-semibold mb-4">{t.footer.legal}</h4>
                         <ul className="space-y-3">
+                            <li><Link href="/impressum" className="text-gray-500 hover:text-white transition-colors text-sm">{t.footer.impressum}</Link></li>
                             <li><Link href="/privacy" className="text-gray-500 hover:text-white transition-colors text-sm">{t.footer.privacy}</Link></li>
                             <li><Link href="/terms" className="text-gray-500 hover:text-white transition-colors text-sm">{t.footer.terms}</Link></li>
                             <li><Link href="/cookies" className="text-gray-500 hover:text-white transition-colors text-sm">{t.footer.cookies}</Link></li>
@@ -59,8 +60,8 @@ export function Footer() {
                         <h4 className="text-white font-semibold mb-4">{t.footer.contact}</h4>
                         <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
                             <Mail className="w-4 h-4" />
-                            <a href="mailto:support@bts-tour.eu" className="hover:text-white transition-colors">
-                                support@bts-tour.eu
+                            <a href="mailto:support@bts-tour.com" className="hover:text-white transition-colors">
+                                support@bts-tour.com
                             </a>
                         </div>
                         <p className="text-gray-600 text-xs leading-relaxed">
