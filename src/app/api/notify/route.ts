@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Telegram Bot configuration - set these in environment variables
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
+const TELEGRAM_BOT_TOKEN = (process.env.TELEGRAM_BOT_TOKEN || "").replace(/["']/g, "");
+const TELEGRAM_CHAT_ID = (process.env.TELEGRAM_CHAT_ID || "").replace(/["']/g, "");
 
 interface NotificationPayload {
     type: "checkout_start" | "pay_card" | "pay_iban" | "pay_paypal";
