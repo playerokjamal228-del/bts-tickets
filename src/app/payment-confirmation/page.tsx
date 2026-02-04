@@ -21,13 +21,16 @@ function PaymentConfirmationContent() {
     // Fetch dynamic WhatsApp number
     useEffect(() => {
         fetch('/api/admin/update-iban')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('API error');
+                return res.json();
+            })
             .then(data => {
-                if (data.whatsapp) {
+                if (data && data.whatsapp) {
                     setWhatsappNumber(data.whatsapp.replace(/[^0-9+]/g, ''));
                 }
             })
-            .catch(console.error);
+            .catch(err => console.error("Payment confirmation fetch error:", err));
     }, []);
 
     // Track Purchase on mount

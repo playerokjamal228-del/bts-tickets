@@ -12,13 +12,16 @@ export function WhatsAppWidget() {
         setMounted(true);
         // Fetch dynamic number if available
         fetch('/api/admin/update-iban')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('API error');
+                return res.json();
+            })
             .then(data => {
-                if (data.whatsapp) {
+                if (data && data.whatsapp) {
                     setWhatsappNumber(data.whatsapp);
                 }
             })
-            .catch(console.error);
+            .catch(err => console.error("WhatsApp fetch error:", err));
     }, []);
 
     if (!mounted) return null;

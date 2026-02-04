@@ -20,13 +20,16 @@ function SuccessContent() {
     // Fetch WhatsApp number from API
     useEffect(() => {
         fetch('/api/admin/update-iban')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('API error');
+                return res.json();
+            })
             .then(data => {
-                if (data.whatsapp) {
+                if (data && data.whatsapp) {
                     setWhatsappNumber(data.whatsapp);
                 }
             })
-            .catch(console.error);
+            .catch(err => console.error("Success page fetch error:", err));
     }, []);
 
     // Countdown timer
