@@ -53,7 +53,7 @@ export function CookieBanner() {
                     </Button>
                     <Button
                         onClick={handleAccept}
-                        className="bg-white text-black hover:bg-gray-200 whitespace-nowrap min-w-[100px]"
+                        className="bg-white text-black hover:bg-gray-200 whitespace-nowrap min-w-[100px] !bg-white !text-black"
                     >
                         {t.cookie.accept}
                     </Button>
