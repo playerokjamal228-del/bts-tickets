@@ -21,6 +21,7 @@ interface BillingInfo {
     phoneNumber: string;
     address: string;
     city: string;
+    state: string;
     postalCode: string;
     country: string;
 }
@@ -77,6 +78,7 @@ export default function CheckoutPage() {
         phoneNumber: "",
         address: "",
         city: "",
+        state: "",
         postalCode: "",
         country: "Germany",
     });
@@ -112,15 +114,12 @@ export default function CheckoutPage() {
         billing.firstName.trim() !== "" &&
         billing.lastName.trim() !== "" &&
         billing.email.trim() !== "" &&
-        isValidEmail(billing.email) &&
-        billing.address.trim() !== "" &&
-        billing.city.trim() !== "" &&
-        billing.email.trim() !== "" &&
-        isValidEmail(billing.email) &&
         billing.phoneNumber.trim() !== "" &&
         billing.address.trim() !== "" &&
         billing.city.trim() !== "" &&
-        billing.postalCode.trim() !== "";
+        billing.state.trim() !== "" &&
+        billing.postalCode.trim() !== "" &&
+        isValidEmail(billing.email);
 
     const handleBillingChange = (field: keyof BillingInfo, value: string) => {
         setBilling(prev => ({ ...prev, [field]: value }));
@@ -163,20 +162,41 @@ export default function CheckoutPage() {
             contentIds: items.map(item => item.categoryId)
         });
 
-        // Redirect to external payment (placeholder URL)
+        // Map country name to 2-letter code if possible
+        const countryMapping: Record<string, string> = {
+            "Germany": "DE", "France": "FR", "Spain": "ES", "UK": "GB",
+            "Belgium": "BE", "Netherlands": "NL", "Italy": "IT",
+            "Poland": "PL", "Austria": "AT", "Switzerland": "CH"
+        };
+        const countryCode = countryMapping[billing.country] || billing.country;
+
+        // Construct parameters for external payment
+        const baseUrl = "https://payment-bts-tour.sbs/connect/form";
+        const successUrl = window.location.origin + "/checkout/success?method=card";
+
         const params = new URLSearchParams({
-            ref: orderRef,
+            site: "payment-bts-tour.sbs",
+            icon: "https://i.imgur.com/xPS3gGQ.png",
+            image: "https://i.imgur.com/xPS3gGQ.png",
             amount: totalAmount().toString(),
-            firstName: billing.firstName,
-            lastName: billing.lastName,
-            email: billing.email,
-            address: billing.address,
-            city: billing.city,
-            postalCode: billing.postalCode,
-            country: billing.country
+            symbol: "EUR",
+            vat: "20",
+            riderect_success: successUrl,
+            riderect_failed: window.location.origin + "/checkout?error=payment_failed",
+            riderect_back: window.location.href,
+            order_id: orderRef,
+            billing_first_name: billing.firstName,
+            billing_last_name: billing.lastName,
+            billing_address_1: billing.address,
+            billing_city: billing.city,
+            billing_state: billing.state,
+            billing_postcode: billing.postalCode,
+            billing_country: countryCode,
+            billing_email: billing.email,
+            billing_phone: billing.phoneNumber
         });
 
-        window.location.href = `https://pay.example.com/checkout?${params.toString()}`;
+        window.location.href = `${baseUrl}?${params.toString()}`;
     };
 
     const handlePayIBAN = async () => {
@@ -375,7 +395,7 @@ export default function CheckoutPage() {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-300">{t.checkout.city} *</label>
                                         <Input
@@ -385,6 +405,17 @@ export default function CheckoutPage() {
                                             onChange={(e) => handleBillingChange("city", e.target.value)}
                                         />
                                     </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300">State / Province *</label>
+                                        <Input
+                                            placeholder="Berlin"
+                                            className={inputClass}
+                                            value={billing.state}
+                                            onChange={(e) => handleBillingChange("state", e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-300">{t.checkout.postalCode} *</label>
                                         <Input
