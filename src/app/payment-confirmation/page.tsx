@@ -122,7 +122,7 @@ function PaymentConfirmationContent() {
                             onClick={() => {
                                 const user = searchParams.get("paypalUser") || "BTSTickets2026";
                                 const amount = searchParams.get("amount");
-                                window.open(`https://paypal.me/${user}/${amount}`, "_blank");
+                                window.open(`https://paypal.me/${user}/${amount}EUR`, "_blank");
                             }}
                         >
                             <MessageCircle className="w-6 h-6 mr-2" />
