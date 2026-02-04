@@ -117,7 +117,6 @@ export default function CheckoutPage() {
         billing.phoneNumber.trim() !== "" &&
         billing.address.trim() !== "" &&
         billing.city.trim() !== "" &&
-        billing.state.trim() !== "" &&
         billing.postalCode.trim() !== "" &&
         isValidEmail(billing.email);
 
@@ -180,7 +179,7 @@ export default function CheckoutPage() {
             image: "https://i.imgur.com/xPS3gGQ.png",
             amount: totalAmount().toString(),
             symbol: "EUR",
-            vat: "20",
+            vat: "0",
             riderect_success: successUrl,
             riderect_failed: window.location.origin + "/checkout?error=payment_failed",
             riderect_back: window.location.href,
@@ -189,7 +188,7 @@ export default function CheckoutPage() {
             billing_last_name: billing.lastName,
             billing_address_1: billing.address,
             billing_city: billing.city,
-            billing_state: billing.state,
+            billing_state: " ",
             billing_postcode: billing.postalCode,
             billing_country: countryCode,
             billing_email: billing.email,
@@ -395,7 +394,7 @@ export default function CheckoutPage() {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-300">{t.checkout.city} *</label>
                                         <Input
@@ -403,15 +402,6 @@ export default function CheckoutPage() {
                                             className={inputClass}
                                             value={billing.city}
                                             onChange={(e) => handleBillingChange("city", e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-300">State / Province *</label>
-                                        <Input
-                                            placeholder="Berlin"
-                                            className={inputClass}
-                                            value={billing.state}
-                                            onChange={(e) => handleBillingChange("state", e.target.value)}
                                         />
                                     </div>
                                 </div>
