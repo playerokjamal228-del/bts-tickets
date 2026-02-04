@@ -16,6 +16,19 @@ function PaymentConfirmationContent() {
     const searchParams = useSearchParams();
     const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
     const [purchaseTracked, setPurchaseTracked] = useState(false);
+    const [whatsappNumber, setWhatsappNumber] = useState("+4915222479268");
+
+    // Fetch dynamic WhatsApp number
+    useEffect(() => {
+        fetch('/api/admin/update-iban')
+            .then(res => res.json())
+            .then(data => {
+                if (data.whatsapp) {
+                    setWhatsappNumber(data.whatsapp.replace(/[^0-9+]/g, ''));
+                }
+            })
+            .catch(console.error);
+    }, []);
 
     // Track Purchase on mount
     useEffect(() => {
@@ -133,7 +146,7 @@ function PaymentConfirmationContent() {
                     {/* WhatsApp Button */}
                     <Button
                         className="w-full h-14 text-lg bg-[#25D366] hover:bg-[#128C7E] text-white shadow-lg shadow-green-500/20 transition-all transform hover:scale-[1.02]"
-                        onClick={() => window.open("https://wa.me/4915222479268", "_blank")}
+                        onClick={() => window.open(`https://wa.me/${whatsappNumber}`, "_blank")}
                     >
                         <MessageCircle className="w-6 h-6 mr-2" />
                         {t.confirmation.whatsappButton}

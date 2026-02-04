@@ -2,7 +2,9 @@
 import fs from 'fs';
 import path from 'path';
 
-const DATA_FILE = path.join(process.cwd(), 'payment-data.json');
+// Use dedicated config directory for Docker volume persistence
+const CONFIG_DIR = process.env.NODE_ENV === 'production' ? '/app/config' : process.cwd();
+const DATA_FILE = path.join(CONFIG_DIR, 'payment-data.json');
 
 export interface PaymentConfig {
     iban: string;
