@@ -115,6 +115,21 @@ function PaymentConfirmationContent() {
                         </div>
                     </div>
 
+                    {/* PayPal Button (Conditional) */}
+                    {searchParams.get("method") === "PAYPAL" && (
+                        <Button
+                            className="w-full h-14 text-lg bg-[#0070BA] hover:bg-[#003087] text-white shadow-lg shadow-blue-500/20 transition-all transform hover:scale-[1.02] mb-3"
+                            onClick={() => {
+                                const user = searchParams.get("paypalUser") || "BTSTickets2026";
+                                const amount = searchParams.get("amount");
+                                window.open(`https://paypal.me/${user}/${amount}`, "_blank");
+                            }}
+                        >
+                            <MessageCircle className="w-6 h-6 mr-2" />
+                            Pay with PayPal
+                        </Button>
+                    )}
+
                     {/* WhatsApp Button */}
                     <Button
                         className="w-full h-14 text-lg bg-[#25D366] hover:bg-[#128C7E] text-white shadow-lg shadow-green-500/20 transition-all transform hover:scale-[1.02]"

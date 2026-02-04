@@ -184,20 +184,16 @@ export default function CheckoutPage() {
         if (!isBillingComplete) return;
 
         setLoading(true);
-        await sendNotification("pay_paypal");
+        // Fire and forget notification to avoid blocking
+        sendNotification("pay_paypal");
 
-        // Track Purchase event moved to confirmation page
-
-        // Open PayPal in new tab
-        const url = `https://paypal.me/${ibanConfig?.paypalUsername || "BTSTickets2026"}/${totalAmount()}`;
-        window.open(url, '_blank');
-
-        // Redirect to confirmation page
-        // Redirect with params
+        // Redirect with params including PayPal info
         const params = new URLSearchParams({
             ref: orderRef,
             amount: totalAmount().toString(),
-            ids: items.map(item => item.categoryId).join(",")
+            ids: items.map(item => item.categoryId).join(","),
+            method: "PAYPAL",
+            paypalUser: ibanConfig?.paypalUsername || "BTSTickets2026"
         });
         router.push(`/payment-confirmation?${params.toString()}`);
     };
