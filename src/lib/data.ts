@@ -80,7 +80,7 @@ export const getEventData = (id: string): EventData | null => {
 
                 offers.push({
                     id: `${id}-${block}-${r}`,
-                    sectorName: `${sectorName} ${block}`,
+                    sectorName: block === "innenraum" ? sectorName : `${sectorName} ${block}`,
                     block: block,
                     row: typeof r === 'number' ? `Row ${r}` : r,
                     price: price - (idx * 10),
