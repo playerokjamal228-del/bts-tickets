@@ -15,7 +15,7 @@ export interface PixelConfig {
 
 // Default config - UPDATE THESE VALUES
 const DEFAULT_CONFIG: PixelConfig = {
-    facebookPixelId: "238576258118345",
+    facebookPixelId: "1649014073201879",
     facebookAccessToken: "EAASez8zSC2MBQhA8bxeDty2AOQyMn0Dn7iMyOWmeKIFVpaVRucsaCNz3fOZArCh2BCrZCd8Bej4ZCdntxipRZAWut0JzSNZCCwZCZBoxCU5CTuz2HY0HQlBbZB7hqnmZBtNBbJvIkn0Hb3MaaSGDWUmurJcHXfD5cZCB0FTYAL1uu141FVcVek1R9m5YMlkGlJmR5ZCdwZDZD",
     googleAdsId: "YOUR_GOOGLE_ADS_ID",
     googleAdsConversionLabel: "YOUR_CONVERSION_LABEL"
