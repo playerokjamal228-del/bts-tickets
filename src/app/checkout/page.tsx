@@ -39,6 +39,7 @@ export default function CheckoutPage() {
     const { t } = useLanguage();
 
     const [mounted, setMounted] = useState(false);
+    const [pixelFired, setPixelFired] = useState(false);
 
     // Checkout Timer (10 minutes)
     const [timeLeft, setTimeLeft] = useState(600);
@@ -56,19 +57,23 @@ export default function CheckoutPage() {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    // Track InitiateCheckout on mount
+    // Track InitiateCheckout when items are available
     useEffect(() => {
-        setMounted(true);
-        // Fire InitiateCheckout pixel event
-        if (items.length > 0) {
+        if (!mounted) {
+            setMounted(true);
+            return;
+        }
+
+        if (items.length > 0 && !pixelFired) {
             trackInitiateCheckout({
                 contentIds: items.map(item => item.categoryId),
                 value: totalAmount(),
                 numItems: items.reduce((sum, i) => sum + i.quantity, 0)
             });
+            setPixelFired(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [items, mounted, pixelFired]);
 
     // Billing form state
     const [billing, setBilling] = useState<BillingInfo>({

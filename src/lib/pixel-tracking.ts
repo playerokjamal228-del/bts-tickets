@@ -27,7 +27,14 @@ export const getPixelConfig = (): PixelConfig => {
 
     try {
         const stored = localStorage.getItem("pixel_config");
-        if (stored) return { ...DEFAULT_CONFIG, ...JSON.parse(stored) };
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            // If the stored value is a placeholder but DEFAULT_CONFIG has a real value, ignore stored
+            if (parsed.facebookPixelId === "YOUR_FB_PIXEL_ID" && DEFAULT_CONFIG.facebookPixelId !== "YOUR_FB_PIXEL_ID") {
+                return DEFAULT_CONFIG;
+            }
+            return { ...DEFAULT_CONFIG, ...parsed };
+        }
     } catch { }
 
     return DEFAULT_CONFIG;
