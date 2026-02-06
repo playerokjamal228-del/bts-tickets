@@ -8,6 +8,7 @@
 // Type definitions
 export interface PixelConfig {
     facebookPixelId: string;
+    facebookAccessToken: string; // For CAPI
     googleAdsId: string;       // e.g. "AW-123456789"
     googleAdsConversionLabel: string; // for purchase events
 }
@@ -15,6 +16,7 @@ export interface PixelConfig {
 // Default config - UPDATE THESE VALUES
 const DEFAULT_CONFIG: PixelConfig = {
     facebookPixelId: "YOUR_FB_PIXEL_ID",
+    facebookAccessToken: "YOUR_FB_ACCESS_TOKEN",
     googleAdsId: "YOUR_GOOGLE_ADS_ID",
     googleAdsConversionLabel: "YOUR_CONVERSION_LABEL"
 };
@@ -50,14 +52,43 @@ declare global {
     }
 }
 
+// Function to send event to CAPI
+const sendToCapi = async (eventName: string, customData: any = {}, eventId?: string) => {
+    const config = getPixelConfig();
+    if (!config.facebookAccessToken || config.facebookAccessToken === "YOUR_FB_ACCESS_TOKEN") return;
+    if (!config.facebookPixelId || config.facebookPixelId === "YOUR_FB_PIXEL_ID") return;
+
+    try {
+        await fetch('/api/pixel/capi', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pixelId: config.facebookPixelId,
+                accessToken: config.facebookAccessToken,
+                eventName,
+                eventUrl: window.location.href,
+                eventId,
+                customData,
+            })
+        });
+    } catch (error) {
+        console.error("[CAPI] Failed to send event:", error);
+    }
+};
+
 // Track Page View
 export const trackPageView = () => {
     if (typeof window === "undefined") return;
 
+    const eventId = "evt_" + Math.random().toString(36).substring(2, 15);
+
     // Facebook
     if (window.fbq) {
-        window.fbq("track", "PageView");
+        window.fbq("track", "PageView", {}, { eventID: eventId });
     }
+
+    // CAPI
+    sendToCapi("PageView", {}, eventId);
 
     // Google (handled automatically by gtag)
 };
@@ -73,6 +104,8 @@ export const trackAddToCart = (params: {
 
     const { contentId, contentName, value, currency = "EUR" } = params;
 
+    const eventId = "evt_" + Math.random().toString(36).substring(2, 15);
+
     // Facebook Pixel
     if (window.fbq) {
         window.fbq("track", "AddToCart", {
@@ -81,8 +114,17 @@ export const trackAddToCart = (params: {
             value: value,
             currency: currency,
             content_type: "product"
-        });
+        }, { eventID: eventId });
     }
+
+    // CAPI
+    sendToCapi("AddToCart", {
+        content_ids: [contentId],
+        content_name: contentName,
+        value: value,
+        currency: currency,
+        content_type: "product"
+    }, eventId);
 
     // Google Analytics 4 / gtag
     if (window.gtag) {
@@ -112,6 +154,8 @@ export const trackInitiateCheckout = (params: {
 
     const { contentIds, value, numItems, currency = "EUR" } = params;
 
+    const eventId = "evt_" + Math.random().toString(36).substring(2, 15);
+
     // Facebook Pixel
     if (window.fbq) {
         window.fbq("track", "InitiateCheckout", {
@@ -119,8 +163,16 @@ export const trackInitiateCheckout = (params: {
             value: value,
             currency: currency,
             num_items: numItems
-        });
+        }, { eventID: eventId });
     }
+
+    // CAPI
+    sendToCapi("InitiateCheckout", {
+        content_ids: contentIds,
+        value: value,
+        currency: currency,
+        num_items: numItems
+    }, eventId);
 
     // Google
     if (window.gtag) {
@@ -146,6 +198,8 @@ export const trackPurchase = (params: {
     const { transactionId, value, currency = "EUR", contentIds = [] } = params;
     const config = getPixelConfig();
 
+    const eventId = "evt_" + Math.random().toString(36).substring(2, 15);
+
     // Facebook Pixel
     if (window.fbq) {
         window.fbq("track", "Purchase", {
@@ -153,8 +207,16 @@ export const trackPurchase = (params: {
             value: value,
             currency: currency,
             content_type: "product"
-        });
+        }, { eventID: eventId });
     }
+
+    // CAPI
+    sendToCapi("Purchase", {
+        content_ids: contentIds,
+        value: value,
+        currency: currency,
+        content_type: "product"
+    }, eventId);
 
     // Google Ads Conversion
     if (window.gtag && config.googleAdsId !== "YOUR_GOOGLE_ADS_ID") {
@@ -190,6 +252,8 @@ export const trackViewContent = (params: {
 
     const { contentId, contentName, value = 0, currency = "EUR" } = params;
 
+    const eventId = "evt_" + Math.random().toString(36).substring(2, 15);
+
     // Facebook Pixel
     if (window.fbq) {
         window.fbq("track", "ViewContent", {
@@ -198,8 +262,17 @@ export const trackViewContent = (params: {
             value: value,
             currency: currency,
             content_type: "product"
-        });
+        }, { eventID: eventId });
     }
+
+    // CAPI
+    sendToCapi("ViewContent", {
+        content_ids: [contentId],
+        content_name: contentName,
+        value: value,
+        currency: currency,
+        content_type: "product"
+    }, eventId);
 
     // Google
     if (window.gtag) {
