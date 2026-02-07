@@ -40,6 +40,26 @@ export default function CheckoutPage() {
 
     const [mounted, setMounted] = useState(false);
     const [pixelFired, setPixelFired] = useState(false);
+    const [countryCode, setCountryCode] = useState<string>("DE"); // Default to DE effectively showing all methods until loaded, OR restrict. 
+    // Wait, let's default to "DE" to prevent strict lock-in if fetch fails, or "XX" to be safe. 
+    // User wants RESTRICTION. So default "XX" (International) = Card Only.
+    // "DE" = All.
+    // Let's Fetch on mount.
+
+    useEffect(() => {
+        fetch('/api/geo')
+            .then(res => res.json())
+            .then(data => {
+                if (data.country) {
+                    setCountryCode(data.country);
+                    if (data.country !== "DE") {
+                        setPaymentMethod("CARD");
+                    }
+                }
+            })
+            .catch(() => setCountryCode("DE")); // Fallback to DE (All methods) on error to avoid losing sales? Or Card only? 
+        // Better to default to DE (allow everything) if geo fails to avoid blocking users.
+    }, []);
 
     // Checkout Timer (10 minutes)
     const [timeLeft, setTimeLeft] = useState(600);
@@ -457,7 +477,10 @@ export default function CheckoutPage() {
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {/* Tabs */}
-                                <div className="grid grid-cols-3 gap-1 bg-black/20 p-1 rounded-lg">
+                                <div className={cn(
+                                    "grid gap-1 bg-black/20 p-1 rounded-lg",
+                                    countryCode === "DE" ? "grid-cols-3" : "grid-cols-1"
+                                )}>
                                     <button
                                         onClick={() => setPaymentMethod("CARD")}
                                         className={cn(
@@ -470,30 +493,35 @@ export default function CheckoutPage() {
                                         <CreditCard className="w-3 h-3 mr-1" />
                                         Card
                                     </button>
-                                    <button
-                                        onClick={() => setPaymentMethod("IBAN")}
-                                        className={cn(
-                                            "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
-                                            paymentMethod === "IBAN"
-                                                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow"
-                                                : "text-gray-400 hover:text-white"
-                                        )}
-                                    >
-                                        <Landmark className="w-3 h-3 mr-1" />
-                                        IBAN
-                                    </button>
-                                    <button
-                                        onClick={() => setPaymentMethod("PAYPAL")}
-                                        className={cn(
-                                            "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
-                                            paymentMethod === "PAYPAL"
-                                                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow"
-                                                : "text-gray-400 hover:text-white"
-                                        )}
-                                    >
-                                        <MessageCircle className="w-3 h-3 mr-1" />
-                                        PayPal
-                                    </button>
+
+                                    {countryCode === "DE" && (
+                                        <>
+                                            <button
+                                                onClick={() => setPaymentMethod("IBAN")}
+                                                className={cn(
+                                                    "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
+                                                    paymentMethod === "IBAN"
+                                                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow"
+                                                        : "text-gray-400 hover:text-white"
+                                                )}
+                                            >
+                                                <Landmark className="w-3 h-3 mr-1" />
+                                                IBAN
+                                            </button>
+                                            <button
+                                                onClick={() => setPaymentMethod("PAYPAL")}
+                                                className={cn(
+                                                    "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
+                                                    paymentMethod === "PAYPAL"
+                                                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow"
+                                                        : "text-gray-400 hover:text-white"
+                                                )}
+                                            >
+                                                <MessageCircle className="w-3 h-3 mr-1" />
+                                                PayPal
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
 
                                 {/* Payment Content */}
