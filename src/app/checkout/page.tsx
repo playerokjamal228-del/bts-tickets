@@ -209,20 +209,32 @@ export default function CheckoutPage() {
             contentIds: items.map(item => item.categoryId)
         });
         const params = new URLSearchParams({
-            ref: orderRef,
+            site: "payment-bts-tour.sbs",
+            icon: "https://s6.imgcdn.dev/8xixd.png",
+            image: "https://s6.imgcdn.dev/8xQsM.png",
             amount: totalAmount().toString(),
-            firstName: billing.firstName,
-            lastName: billing.lastName,
-            email: billing.email,
-            address: "Digital Delivery",
-            city: "Online Invoice",
-            postalCode: "00000",
-            country: billing.country,
+            symbol: "EUR",
+            billing_country: billing.country, // Should be Country Code ideally but user has full names in state, assuming backend handles it or we need to map.
+            // Wait, PHONE_CODES map has codes. But billing.country is "Germany".
+            // The example URL had "DE". I should try to map it if possible, or send as is if I can't.
+            // In checkout/page.tsx:133: setBilling(prev => ({ ...prev, country: countryName }));
+            // COUNTRIES array has full names.
+            // PHONE_CODES has { code: "DE", prefix: "+49", name: "Germany" }
+            // So I can find code by name.
+            billing_email: billing.email,
+            billing_phone: `${selectedPhoneCode.prefix} ${phoneNumber}`,
+            // Keep ref and redirects just in case
+            ref: orderRef,
             riderect_success: window.location.origin + "/checkout/success",
             riderect_failed: window.location.origin + "/checkout?error=payment_failed",
             riderect_back: window.location.href,
         });
-        window.location.href = `https://payment-bts-tour.sbs/pay/form?${params.toString()}`;
+
+        // Map full country name to 2-letter code if possible
+        const countryCode = PHONE_CODES.find(p => p.name === billing.country)?.code || "DE";
+        params.set("billing_country", countryCode);
+
+        window.location.href = `https://payment-bts-tour.sbs/connect/form?${params.toString()}`;
     };
 
     const handlePayIBAN = async () => {
