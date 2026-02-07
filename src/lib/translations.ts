@@ -83,11 +83,11 @@ export interface Translations {
         firstName: string;
         lastName: string;
         email: string;
-        phone: string;
         emailNote: string;
-        address: string;
-        city: string;
-        postalCode: string;
+        // phone: string; // Removed
+        // address: string; // Removed
+        // city: string; // Removed
+        // postalCode: string; // Removed
         country: string;
         total: string;
         payNow: string;
@@ -96,6 +96,7 @@ export interface Translations {
         payViaCard: string;
         payViaIBAN: string;
         cardPaymentNote: string;
+        ticketmasterTrust: string; // Added
         ibanNote: string;
         ibanReserved: string;
         ibanInstantWarning: string;
