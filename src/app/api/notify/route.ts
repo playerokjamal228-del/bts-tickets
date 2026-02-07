@@ -43,6 +43,9 @@ export async function POST(request: NextRequest) {
         }
 
         // Format message based on notification type
+        let emoji = "🛒";
+        let action = "started checkout process";
+
         if (body.type === "checkout_start") {
             emoji = "🛒";
             action = "started checkout process";
