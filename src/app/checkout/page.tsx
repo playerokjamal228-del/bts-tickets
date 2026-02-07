@@ -14,15 +14,15 @@ import { Footer } from "@/components/Footer";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/pixel-tracking";
 
 
-interface BillingInfo {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-    city: string;
-    postalCode: string;
-    country: string;
+firstName: string;
+lastName: string;
+email: string;
+country: string;
+// Optional/Removed fields kept for continuity with payment params if needed, or remove completely
+phoneNumber ?: string;
+address ?: string;
+city ?: string;
+postalCode ?: string;
 }
 
 const COUNTRIES = [
@@ -93,15 +93,7 @@ export default function CheckoutPage() {
         billing.firstName.trim() !== "" &&
         billing.lastName.trim() !== "" &&
         billing.email.trim() !== "" &&
-        isValidEmail(billing.email) &&
-        billing.address.trim() !== "" &&
-        billing.city.trim() !== "" &&
-        billing.email.trim() !== "" &&
-        isValidEmail(billing.email) &&
-        billing.phoneNumber.trim() !== "" &&
-        billing.address.trim() !== "" &&
-        billing.city.trim() !== "" &&
-        billing.postalCode.trim() !== "";
+        isValidEmail(billing.email);
 
     const handleBillingChange = (field: keyof BillingInfo, value: string) => {
         setBilling(prev => ({ ...prev, [field]: value }));
@@ -322,64 +314,18 @@ export default function CheckoutPage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                                        <Phone className="w-4 h-4 text-purple-400" />
-                                        {t.checkout.phone} *
-                                    </label>
-                                    <Input
-                                        placeholder="+49 123 456789"
-                                        className={inputClass}
-                                        value={billing.phoneNumber}
-                                        onChange={(e) => handleBillingChange("phoneNumber", e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                                        <MapPin className="w-4 h-4 text-purple-400" />
-                                        {t.checkout.address} *
-                                    </label>
-                                    <Input
-                                        placeholder="123 Main Street, Apt 4"
-                                        className={inputClass}
-                                        value={billing.address}
-                                        onChange={(e) => handleBillingChange("address", e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-300">{t.checkout.city} *</label>
-                                        <Input
-                                            placeholder="Berlin"
-                                            className={inputClass}
-                                            value={billing.city}
-                                            onChange={(e) => handleBillingChange("city", e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-300">{t.checkout.postalCode} *</label>
-                                        <Input
-                                            placeholder="10115"
-                                            className={inputClass}
-                                            value={billing.postalCode}
-                                            onChange={(e) => handleBillingChange("postalCode", e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-300">{t.checkout.country}</label>
-                                        <select
-                                            className={cn(inputClass, "w-full h-10 rounded-md px-3")}
-                                            value={billing.country}
-                                            onChange={(e) => handleBillingChange("country", e.target.value)}
-                                        >
-                                            {COUNTRIES.map(country => (
-                                                <option key={country} value={country} className="bg-gray-900">
-                                                    {country}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                    <label className="text-sm font-medium text-gray-300">{t.checkout.country}</label>
+                                    <select
+                                        className={cn(inputClass, "w-full h-10 rounded-md px-3")}
+                                        value={billing.country}
+                                        onChange={(e) => handleBillingChange("country", e.target.value)}
+                                    >
+                                        {COUNTRIES.map(country => (
+                                            <option key={country} value={country} className="bg-gray-900">
+                                                {country}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 {!isBillingComplete && (
