@@ -40,16 +40,13 @@ export default function CheckoutPage() {
 
     const [mounted, setMounted] = useState(false);
     const [pixelFired, setPixelFired] = useState(false);
-    const [countryCode, setCountryCode] = useState<string>("DE"); // Default to DE effectively showing all methods until loaded, OR restrict. 
-    // Wait, let's default to "DE" to prevent strict lock-in if fetch fails, or "XX" to be safe. 
-    // User wants RESTRICTION. So default "XX" (International) = Card Only.
-    // "DE" = All.
-    // Let's Fetch on mount.
+    const [countryCode, setCountryCode] = useState<string>("XX"); // Default to Restricted (XX) to prevent flash of allowed methods
 
     useEffect(() => {
         fetch('/api/geo')
             .then(res => res.json())
             .then(data => {
+                console.log("[GeoIP Debug] Detected:", data); // Debug log
                 if (data.country) {
                     setCountryCode(data.country);
                     if (data.country !== "DE") {
@@ -57,7 +54,12 @@ export default function CheckoutPage() {
                     }
                 }
             })
-            .catch(() => setCountryCode("DE")); // Fallback to DE (All methods) on error to avoid losing sales? Or Card only? 
+            .catch((err) => {
+                console.error("[GeoIP Error] Failed to fetch:", err);
+                setCountryCode("DE"); // Fallback to DE on error, OR keep XX? Let's fallback to allowing all if tech fails?
+                // User said "US IP sees IBAN". If fetch fails, we fallback to DE.
+                // Let's keep fallback to DE for safety, BUT if lookup returns US, it should set US.
+            });
         // Better to default to DE (allow everything) if geo fails to avoid blocking users.
     }, []);
 
