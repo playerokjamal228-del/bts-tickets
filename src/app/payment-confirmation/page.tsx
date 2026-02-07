@@ -133,17 +133,34 @@ function PaymentConfirmationContent() {
 
                     {/* PayPal Button (Conditional) */}
                     {searchParams.get("method") === "PAYPAL" && (
-                        <Button
-                            className="w-full h-14 text-lg bg-[#0070BA] hover:bg-[#003087] text-white shadow-lg shadow-blue-500/20 transition-all transform hover:scale-[1.02] mb-3"
-                            onClick={() => {
-                                const user = searchParams.get("paypalUser") || "BTSTickets2026";
-                                const amount = searchParams.get("amount");
-                                window.open(`https://paypal.me/${user}/${amount}EUR`, "_blank");
-                            }}
-                        >
-                            <MessageCircle className="w-6 h-6 mr-2" />
-                            Pay with PayPal
-                        </Button>
+                        <div className="space-y-4">
+                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
+                                <div className="flex items-start gap-3">
+                                    <div className="p-2 bg-blue-500/20 rounded-lg shrink-0">
+                                        <MessageCircle className="w-5 h-5 text-blue-400" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-blue-300 mb-1">Why 'Friends & Family'?</h3>
+                                        <p className="text-sm text-gray-300 leading-relaxed">
+                                            To keep our ticket prices 30% lower than market value, we recommend the 'Friends & Family' option.
+                                            It helps us avoid high corporate fees and pass the savings to you.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                className="w-full h-14 text-lg bg-[#0070BA] hover:bg-[#003087] text-white shadow-lg shadow-blue-500/20 transition-all transform hover:scale-[1.02] mb-3"
+                                onClick={() => {
+                                    const user = searchParams.get("paypalUser") || "BTSTickets2026";
+                                    const amount = searchParams.get("amount");
+                                    window.open(`https://paypal.me/${user}/${amount}EUR`, "_blank");
+                                }}
+                            >
+                                <MessageCircle className="w-6 h-6 mr-2" />
+                                Pay with PayPal
+                            </Button>
+                        </div>
                     )}
 
                     {/* WhatsApp Button */}

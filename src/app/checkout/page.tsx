@@ -578,19 +578,6 @@ export default function CheckoutPage() {
                                     {paymentMethod === "PAYPAL" && (
                                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
                                             {/* Friends & Family Detailed Warning */}
-                                            <div className="bg-gradient-to-b from-blue-900/40 to-blue-900/10 border border-blue-500/20 rounded-lg p-5">
-                                                <h3 className="font-bold text-blue-300 mb-2 text-base">{t.paypal.ffTitle}</h3>
-                                                <p className="text-gray-400 text-sm mb-4 italic">{t.paypal.ffSubtitle}</p>
-
-                                                <div className="space-y-3 text-sm">
-                                                    <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
-                                                        <p className="text-green-300 font-medium pb-0.5">{t.paypal.ffGood}</p>
-                                                    </div>
-                                                    <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md opacity-80">
-                                                        <p className="text-red-300">{t.paypal.ffBad}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                             <div className="bg-gradient-to-br from-blue-500/20 to-blue-700/20 p-5 rounded-xl border border-blue-500/30">
                                                 <div className="flex items-center gap-3 mb-5">
