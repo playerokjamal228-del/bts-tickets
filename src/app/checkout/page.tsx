@@ -599,6 +599,33 @@ export default function CheckoutPage() {
                                 )}
                             </CardContent>
                         </Card>
+
+                        {/* FanProtect Guarantee */}
+                        <div className="mt-6 space-y-4">
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex gap-4 items-start backdrop-blur-md">
+                                <div className="p-2 bg-blue-500/20 rounded-full shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /></svg>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-white text-sm mb-1">{t.checkout.fanProtectTitle}</h3>
+                                    <p className="text-xs text-gray-400 leading-relaxed">
+                                        {t.checkout.fanProtectDesc}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex gap-4 items-start backdrop-blur-md">
+                                <div className="p-2 bg-purple-500/20 rounded-full shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-400"><rect width="20" height="12" x="2" y="6" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></svg>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-white text-sm mb-1">{t.checkout.resellTitle}</h3>
+                                    <p className="text-xs text-gray-400 leading-relaxed">
+                                        {t.checkout.resellDesc}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
