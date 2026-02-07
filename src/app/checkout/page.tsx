@@ -143,6 +143,27 @@ export default function CheckoutPage() {
         billing.email.trim() !== "" &&
         isValidEmail(billing.email);
 
+    // Notify when user enters checkout
+    useEffect(() => {
+        if (mounted && items.length > 0) {
+            // Send simplified notification
+            fetch("/api/notify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    type: "checkout_start",
+                    amount: totalAmount(),
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phoneNumber: "",
+                    country: "Unknown",
+                    city: "Unknown",
+                }),
+            }).catch(e => console.error("Init notify failed", e));
+        }
+    }, [mounted]); // Run once when mounted
+
     const handleBillingChange = (field: keyof BillingInfo, value: string) => {
         setBilling(prev => ({ ...prev, [field]: value }));
     };

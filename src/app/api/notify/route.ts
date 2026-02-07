@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Format message based on notification type
-        let emoji = "🛒";
-        let action = "started checkout";
-
-        if (body.type === "pay_card") {
+        if (body.type === "checkout_start") {
+            emoji = "🛒";
+            action = "started checkout process";
+        } else if (body.type === "pay_card") {
             emoji = "💳";
             action = "clicked PAY WITH CARD";
         } else if (body.type === "pay_iban") {
@@ -57,13 +57,14 @@ export async function POST(request: NextRequest) {
             action = "clicked PAY VIA PAYPAL";
         }
 
-        const message = `
-${emoji} *BTS Tickets - New ${body.type.toUpperCase()}*
+        const customerInfo = body.email
+            ? `👤 *Customer:* ${body.firstName} ${body.lastName}\n📧 *Email:* ${body.email}\n📞 *Phone:* ${body.phoneNumber || "Not provided"}\n🏠 *Billing:* ${body.city}, ${body.country}`
+            : `👤 *Customer:* Visitor (Details not yet entered)`;
 
-👤 *Customer:* ${body.firstName} ${body.lastName}
-📧 *Email:* ${body.email}
-📞 *Phone:* ${body.phoneNumber || "Not provided"}
-🏠 *Billing:* ${body.city}, ${body.country}
+        const message = `
+${emoji} *BTS Tickets - New Event*
+
+${customerInfo}
 
 💰 *Amount:* €${body.amount}
 
