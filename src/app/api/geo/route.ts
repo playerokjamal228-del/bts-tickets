@@ -6,6 +6,15 @@ export async function GET(request: Request) {
     // 1. Get IP from headers - try multiple common headers
     const headers = request.headers;
 
+    // CLOUDFLARE: Check if Cloudflare already provides the country code
+    const cfCountry = headers.get('cf-ipcountry');
+    if (cfCountry && cfCountry !== 'XX' && cfCountry !== 'T1') {
+        // Cloudflare detected the country - use it directly!
+        const cfIP = headers.get('cf-connecting-ip') || 'cloudflare';
+        console.log(`[GeoIP API] Cloudflare detected country: ${cfCountry}, IP: ${cfIP}`);
+        return NextResponse.json({ country: cfCountry, ip: cfIP, source: 'cloudflare' });
+    }
+
     // Priority order: CF-Connecting-IP (Cloudflare), X-Real-IP (Nginx), X-Forwarded-For, then fallback
     const cfIP = headers.get('cf-connecting-ip');
     const realIP = headers.get('x-real-ip');
