@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Landmark, Trash2, ArrowLeft, User, Mail, MapPin, Lock, ExternalLink, MessageCircle, Phone, Clock } from "lucide-react";
+import { CreditCard, Landmark, Trash2, ArrowLeft, User, Mail, MapPin, Lock, ExternalLink, MessageCircle, Phone } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/language-context";
@@ -21,7 +21,6 @@ interface BillingInfo {
     phoneNumber: string;
     address: string;
     city: string;
-    state: string;
     postalCode: string;
     country: string;
 }
@@ -39,63 +38,20 @@ export default function CheckoutPage() {
     const { t } = useLanguage();
 
     const [mounted, setMounted] = useState(false);
-    const [pixelFired, setPixelFired] = useState(false);
-    const [countryCode, setCountryCode] = useState<string>("XX"); // Default to Restricted (XX) to prevent flash of allowed methods
 
+    // Track InitiateCheckout on mount
     useEffect(() => {
-        fetch('/api/geo')
-            .then(res => res.json())
-            .then(data => {
-                console.log("[GeoIP Debug] Detected:", data); // Debug log
-                if (data.country) {
-                    setCountryCode(data.country);
-                    if (data.country !== "DE") {
-                        setPaymentMethod("CARD");
-                    }
-                }
-            })
-            .catch((err) => {
-                console.error("[GeoIP Error] Failed to fetch:", err);
-                setCountryCode("DE"); // Fallback to DE on error, OR keep XX? Let's fallback to allowing all if tech fails?
-                // User said "US IP sees IBAN". If fetch fails, we fallback to DE.
-                // Let's keep fallback to DE for safety, BUT if lookup returns US, it should set US.
-            });
-        // Better to default to DE (allow everything) if geo fails to avoid blocking users.
-    }, []);
-
-    // Checkout Timer (10 minutes)
-    const [timeLeft, setTimeLeft] = useState(600);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-        }, 1000);
-        return () => clearInterval(timer);
-    }, []);
-
-    const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    };
-
-    // Track InitiateCheckout when items are available
-    useEffect(() => {
-        if (!mounted) {
-            setMounted(true);
-            return;
-        }
-
-        if (items.length > 0 && !pixelFired) {
+        setMounted(true);
+        // Fire InitiateCheckout pixel event
+        if (items.length > 0) {
             trackInitiateCheckout({
                 contentIds: items.map(item => item.categoryId),
                 value: totalAmount(),
                 numItems: items.reduce((sum, i) => sum + i.quantity, 0)
             });
-            setPixelFired(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [items, mounted, pixelFired]);
+    }, []);
 
     // Billing form state
     const [billing, setBilling] = useState<BillingInfo>({
@@ -103,9 +59,8 @@ export default function CheckoutPage() {
         lastName: "",
         email: "",
         phoneNumber: "",
-        address: "", // Keep for type compatibility but unused in UI
+        address: "",
         city: "",
-        state: "",
         postalCode: "",
         country: "Germany",
     });
@@ -119,10 +74,7 @@ export default function CheckoutPage() {
 
     useEffect(() => {
         fetch('/api/admin/update-iban')
-            .then(res => {
-                if (!res.ok) throw new Error('API error');
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 setIbanConfig(data);
                 setIbanLoading(false);
@@ -136,33 +88,20 @@ export default function CheckoutPage() {
     // Email validation regex
     const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    // Check if billing is complete (Simplified: Name, Email + valid email)
+    // Check if billing is complete
     const isBillingComplete =
         billing.firstName.trim() !== "" &&
         billing.lastName.trim() !== "" &&
         billing.email.trim() !== "" &&
-        isValidEmail(billing.email);
-
-    // Notify when user enters checkout
-    useEffect(() => {
-        if (mounted && items.length > 0) {
-            // Send simplified notification
-            fetch("/api/notify", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    type: "checkout_start",
-                    amount: totalAmount(),
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phoneNumber: "",
-                    country: "Unknown",
-                    city: "Unknown",
-                }),
-            }).catch(e => console.error("Init notify failed", e));
-        }
-    }, [mounted]); // Run once when mounted
+        isValidEmail(billing.email) &&
+        billing.address.trim() !== "" &&
+        billing.city.trim() !== "" &&
+        billing.email.trim() !== "" &&
+        isValidEmail(billing.email) &&
+        billing.phoneNumber.trim() !== "" &&
+        billing.address.trim() !== "" &&
+        billing.city.trim() !== "" &&
+        billing.postalCode.trim() !== "";
 
     const handleBillingChange = (field: keyof BillingInfo, value: string) => {
         setBilling(prev => ({ ...prev, [field]: value }));
@@ -180,9 +119,9 @@ export default function CheckoutPage() {
                     firstName: billing.firstName,
                     lastName: billing.lastName,
                     email: billing.email,
-                    phoneNumber: billing.phoneNumber || "Not provided",
+                    phoneNumber: billing.phoneNumber,
                     country: billing.country,
-                    city: billing.city || "Online",
+                    city: billing.city,
                 }),
             });
         } catch (e) {
@@ -205,42 +144,20 @@ export default function CheckoutPage() {
             contentIds: items.map(item => item.categoryId)
         });
 
-        // Map country name to 2-letter code if possible
-        const countryMapping: Record<string, string> = {
-            "Germany": "DE", "France": "FR", "Spain": "ES", "UK": "GB",
-            "Belgium": "BE", "Netherlands": "NL", "Italy": "IT",
-            "Poland": "PL", "Austria": "AT", "Switzerland": "CH"
-        };
-        const countryCode = countryMapping[billing.country] || billing.country;
-
-        // Construct parameters for external payment
-        const baseUrl = "https://payment-bts-tour.sbs/connect/form";
-        const successUrl = window.location.origin + "/checkout/success?method=card";
-
-        // Use placeholders for fields removed from UI to satisfy payment provider validity checks
+        // Redirect to external payment (placeholder URL)
         const params = new URLSearchParams({
-            site: "payment-bts-tour.sbs",
-            icon: "https://i.imgur.com/xPS3gGQ.png",
-            image: "https://i.imgur.com/xPS3gGQ.png",
+            ref: orderRef,
             amount: totalAmount().toString(),
-            symbol: "EUR",
-            vat: "0",
-            riderect_success: successUrl,
-            riderect_failed: window.location.origin + "/checkout?error=payment_failed",
-            riderect_back: window.location.href,
-            order_id: orderRef,
-            billing_first_name: billing.firstName,
-            billing_last_name: billing.lastName,
-            billing_address_1: "Digital Delivery", // Placeholder
-            billing_city: "Online Invoice",        // Placeholder
-            billing_state: " ",
-            billing_postcode: "00000",             // Placeholder
-            billing_country: countryCode,
-            billing_email: billing.email,
-            billing_phone: billing.phoneNumber || "0000000000" // Placeholder if empty
+            firstName: billing.firstName,
+            lastName: billing.lastName,
+            email: billing.email,
+            address: billing.address,
+            city: billing.city,
+            postalCode: billing.postalCode,
+            country: billing.country
         });
 
-        window.location.href = `${baseUrl}?${params.toString()}`;
+        window.location.href = `https://pay.example.com/checkout?${params.toString()}`;
     };
 
     const handlePayIBAN = async () => {
@@ -249,36 +166,38 @@ export default function CheckoutPage() {
         setLoading(true);
         await sendNotification("pay_iban");
 
-        // Track Purchase event moved to confirmation page
+        // Track Purchase event
+        trackPurchase({
+            transactionId: orderRef,
+            value: totalAmount(),
+            contentIds: items.map(item => item.categoryId)
+        });
 
         // Show confirmation and clear cart
         // Show confirmation and clear cart
         clearCart();
-        // Redirect with params
-        const params = new URLSearchParams({
-            ref: orderRef,
-            amount: totalAmount().toString(),
-            ids: items.map(item => item.categoryId).join(",")
-        });
-        router.push(`/payment-confirmation?${params.toString()}`);
+        router.push("/payment-confirmation");
     };
 
     const handlePayPayPal = async () => {
         if (!isBillingComplete) return;
 
         setLoading(true);
-        // Fire and forget notification to avoid blocking
-        sendNotification("pay_paypal");
+        await sendNotification("pay_paypal");
 
-        // Redirect with params including PayPal info
-        const params = new URLSearchParams({
-            ref: orderRef,
-            amount: totalAmount().toString(),
-            ids: items.map(item => item.categoryId).join(","),
-            method: "PAYPAL",
-            paypalUser: ibanConfig?.paypalUsername || "BTSTickets2026"
+        // Track Purchase event
+        trackPurchase({
+            transactionId: orderRef,
+            value: totalAmount(),
+            contentIds: items.map(item => item.categoryId)
         });
-        router.push(`/payment-confirmation?${params.toString()}`);
+
+        // Open PayPal in new tab
+        const url = `https://paypal.me/${ibanConfig?.paypalUsername || "BTSTickets2026"}/${totalAmount()}`;
+        window.open(url, '_blank');
+
+        // Redirect to success
+        router.push("/checkout/success?method=paypal");
     };
 
     if (items.length === 0) {
@@ -321,17 +240,6 @@ export default function CheckoutPage() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {/* Reservation Timer */}
-                                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 flex items-center justify-between mb-4 animate-pulse">
-                                    <div className="flex items-center gap-2 text-yellow-200 text-sm font-medium">
-                                        <Clock className="w-4 h-4" />
-                                        <span>{t.checkout.ticketsReserved}</span>
-                                    </div>
-                                    <div className="font-mono font-bold text-yellow-400 text-lg">
-                                        {formatTime(timeLeft)}
-                                    </div>
-                                </div>
-
                                 {items.map((item) => (
                                     <div
                                         key={`${item.categoryId}-${item.date}`}
@@ -411,28 +319,67 @@ export default function CheckoutPage() {
                                         value={billing.email}
                                         onChange={(e) => handleBillingChange("email", e.target.value)}
                                     />
-                                    {/* Ticketmaster Trust Badge */}
-                                    <div className="bg-purple-500/10 border border-purple-500/30 rounded-md p-3 text-xs text-purple-200 flex items-start gap-2 mt-2">
-                                        <Lock className="w-4 h-4 shrink-0 mt-0.5 text-purple-400" />
-                                        <span>
-                                            {(t.checkout as any).ticketmasterTrust || "🔒 Official Ticketmaster Transfer: Your tickets will be transferred directly to this email address. 100% Safe & Guaranteed."}
-                                        </span>
-                                    </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-300">{t.checkout.country}</label>
-                                    <select
-                                        className={cn(inputClass, "w-full h-10 rounded-md px-3")}
-                                        value={billing.country}
-                                        onChange={(e) => handleBillingChange("country", e.target.value)}
-                                    >
-                                        {COUNTRIES.map(country => (
-                                            <option key={country} value={country} className="bg-gray-900">
-                                                {country}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                        <Phone className="w-4 h-4 text-purple-400" />
+                                        {t.checkout.phone} *
+                                    </label>
+                                    <Input
+                                        placeholder="+49 123 456789"
+                                        className={inputClass}
+                                        value={billing.phoneNumber}
+                                        onChange={(e) => handleBillingChange("phoneNumber", e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                        <MapPin className="w-4 h-4 text-purple-400" />
+                                        {t.checkout.address} *
+                                    </label>
+                                    <Input
+                                        placeholder="123 Main Street, Apt 4"
+                                        className={inputClass}
+                                        value={billing.address}
+                                        onChange={(e) => handleBillingChange("address", e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300">{t.checkout.city} *</label>
+                                        <Input
+                                            placeholder="Berlin"
+                                            className={inputClass}
+                                            value={billing.city}
+                                            onChange={(e) => handleBillingChange("city", e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300">{t.checkout.postalCode} *</label>
+                                        <Input
+                                            placeholder="10115"
+                                            className={inputClass}
+                                            value={billing.postalCode}
+                                            onChange={(e) => handleBillingChange("postalCode", e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300">{t.checkout.country}</label>
+                                        <select
+                                            className={cn(inputClass, "w-full h-10 rounded-md px-3")}
+                                            value={billing.country}
+                                            onChange={(e) => handleBillingChange("country", e.target.value)}
+                                        >
+                                            {COUNTRIES.map(country => (
+                                                <option key={country} value={country} className="bg-gray-900">
+                                                    {country}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {!isBillingComplete && (
@@ -456,10 +403,7 @@ export default function CheckoutPage() {
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {/* Tabs */}
-                                <div className={cn(
-                                    "grid gap-1 bg-black/20 p-1 rounded-lg",
-                                    countryCode === "DE" ? "grid-cols-3" : "grid-cols-1"
-                                )}>
+                                <div className="grid grid-cols-3 gap-1 bg-black/20 p-1 rounded-lg">
                                     <button
                                         onClick={() => setPaymentMethod("CARD")}
                                         className={cn(
@@ -472,35 +416,30 @@ export default function CheckoutPage() {
                                         <CreditCard className="w-3 h-3 mr-1" />
                                         Card
                                     </button>
-
-                                    {countryCode === "DE" && (
-                                        <>
-                                            <button
-                                                onClick={() => setPaymentMethod("IBAN")}
-                                                className={cn(
-                                                    "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
-                                                    paymentMethod === "IBAN"
-                                                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow"
-                                                        : "text-gray-400 hover:text-white"
-                                                )}
-                                            >
-                                                <Landmark className="w-3 h-3 mr-1" />
-                                                IBAN
-                                            </button>
-                                            <button
-                                                onClick={() => setPaymentMethod("PAYPAL")}
-                                                className={cn(
-                                                    "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
-                                                    paymentMethod === "PAYPAL"
-                                                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow"
-                                                        : "text-gray-400 hover:text-white"
-                                                )}
-                                            >
-                                                <MessageCircle className="w-3 h-3 mr-1" />
-                                                PayPal
-                                            </button>
-                                        </>
-                                    )}
+                                    <button
+                                        onClick={() => setPaymentMethod("IBAN")}
+                                        className={cn(
+                                            "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
+                                            paymentMethod === "IBAN"
+                                                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow"
+                                                : "text-gray-400 hover:text-white"
+                                        )}
+                                    >
+                                        <Landmark className="w-3 h-3 mr-1" />
+                                        IBAN
+                                    </button>
+                                    <button
+                                        onClick={() => setPaymentMethod("PAYPAL")}
+                                        className={cn(
+                                            "flex items-center justify-center py-2 rounded-md text-xs font-medium transition-all",
+                                            paymentMethod === "PAYPAL"
+                                                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow"
+                                                : "text-gray-400 hover:text-white"
+                                        )}
+                                    >
+                                        <MessageCircle className="w-3 h-3 mr-1" />
+                                        PayPal
+                                    </button>
                                 </div>
 
                                 {/* Payment Content */}
@@ -585,6 +524,19 @@ export default function CheckoutPage() {
                                     {paymentMethod === "PAYPAL" && (
                                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
                                             {/* Friends & Family Detailed Warning */}
+                                            <div className="bg-gradient-to-b from-blue-900/40 to-blue-900/10 border border-blue-500/20 rounded-lg p-5">
+                                                <h3 className="font-bold text-blue-300 mb-2 text-base">{t.paypal.ffTitle}</h3>
+                                                <p className="text-gray-400 text-sm mb-4 italic">{t.paypal.ffSubtitle}</p>
+
+                                                <div className="space-y-3 text-sm">
+                                                    <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
+                                                        <p className="text-green-300 font-medium pb-0.5">{t.paypal.ffGood}</p>
+                                                    </div>
+                                                    <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md opacity-80">
+                                                        <p className="text-red-300">{t.paypal.ffBad}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div className="bg-gradient-to-br from-blue-500/20 to-blue-700/20 p-5 rounded-xl border border-blue-500/30">
                                                 <div className="flex items-center gap-3 mb-5">
