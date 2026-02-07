@@ -294,3 +294,85 @@ export const trackViewContent = (params: {
         });
     }
 };
+
+// Track Lead (after email submission - Step 1)
+export const trackLead = (params: {
+    email?: string;
+    value?: number;
+    currency?: string;
+}) => {
+    if (typeof window === "undefined") return;
+
+    const { email, value = 0, currency = "EUR" } = params;
+
+    const eventId = "evt_" + Math.random().toString(36).substring(2, 15);
+
+    // Facebook Pixel
+    if (window.fbq) {
+        window.fbq("track", "Lead", {
+            value: value,
+            currency: currency,
+            content_category: "ticket_purchase"
+        }, { eventID: eventId });
+    }
+
+    // CAPI
+    sendToCapi("Lead", {
+        value: value,
+        currency: currency,
+        content_category: "ticket_purchase",
+        em: email
+    }, eventId);
+
+    // Google
+    if (window.gtag) {
+        window.gtag("event", "generate_lead", {
+            currency: currency,
+            value: value
+        });
+    }
+
+    console.log("[Pixel] Lead captured:", email ? email.substring(0, 3) + "***" : "no email");
+};
+
+// Track Add Payment Info (after details submission - Step 2)
+export const trackAddPaymentInfo = (params: {
+    value?: number;
+    currency?: string;
+    contentIds?: string[];
+}) => {
+    if (typeof window === "undefined") return;
+
+    const { value = 0, currency = "EUR", contentIds = [] } = params;
+
+    const eventId = "evt_" + Math.random().toString(36).substring(2, 15);
+
+    // Facebook Pixel
+    if (window.fbq) {
+        window.fbq("track", "AddPaymentInfo", {
+            value: value,
+            currency: currency,
+            content_ids: contentIds,
+            content_type: "product"
+        }, { eventID: eventId });
+    }
+
+    // CAPI
+    sendToCapi("AddPaymentInfo", {
+        value: value,
+        currency: currency,
+        content_ids: contentIds,
+        content_type: "product"
+    }, eventId);
+
+    // Google
+    if (window.gtag) {
+        window.gtag("event", "add_payment_info", {
+            currency: currency,
+            value: value,
+            items: contentIds.map((id: string) => ({ item_id: id }))
+        });
+    }
+
+    console.log("[Pixel] AddPaymentInfo:", value, currency);
+};
