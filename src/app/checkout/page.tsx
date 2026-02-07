@@ -14,15 +14,16 @@ import { Footer } from "@/components/Footer";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/pixel-tracking";
 
 
-firstName: string;
-lastName: string;
-email: string;
-country: string;
-// Optional/Removed fields kept for continuity with payment params if needed, or remove completely
-phoneNumber ?: string;
-address ?: string;
-city ?: string;
-postalCode ?: string;
+interface BillingInfo {
+    firstName: string;
+    lastName: string;
+    email: string;
+    country: string;
+    // Optional/Removed fields kept for continuity with payment params if needed, or remove completely
+    phoneNumber?: string;
+    address?: string;
+    city?: string;
+    postalCode?: string;
 }
 
 const COUNTRIES = [
@@ -58,10 +59,6 @@ export default function CheckoutPage() {
         firstName: "",
         lastName: "",
         email: "",
-        phoneNumber: "",
-        address: "",
-        city: "",
-        postalCode: "",
         country: "Germany",
     });
 
@@ -111,9 +108,9 @@ export default function CheckoutPage() {
                     firstName: billing.firstName,
                     lastName: billing.lastName,
                     email: billing.email,
-                    phoneNumber: billing.phoneNumber,
+                    phoneNumber: "Not provided",
                     country: billing.country,
-                    city: billing.city,
+                    city: "Unknown",
                 }),
             });
         } catch (e) {
@@ -143,9 +140,9 @@ export default function CheckoutPage() {
             firstName: billing.firstName,
             lastName: billing.lastName,
             email: billing.email,
-            address: billing.address,
-            city: billing.city,
-            postalCode: billing.postalCode,
+            address: "Digital Delivery",
+            city: "Online Invoice",
+            postalCode: "00000",
             country: billing.country
         });
 
