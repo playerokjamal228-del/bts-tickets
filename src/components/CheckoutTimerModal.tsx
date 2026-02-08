@@ -16,8 +16,8 @@ export function CheckoutTimerModal({ onStart, isOpen }: CheckoutTimerModalProps)
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="bg-white text-black rounded-2xl w-full max-w-md p-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-300 relative overflow-hidden">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="bg-white text-black rounded-2xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
 
                 {/* Decorative Top Accent */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-600 to-pink-600" />
