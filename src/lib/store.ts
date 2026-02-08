@@ -61,6 +61,7 @@ export const useCartStore = create<CartState>()(
         {
             name: 'bts-cart-storage',
             storage: createJSONStorage(() => localStorage),
+            skipHydration: true, // Prevent SSR hydration mismatch
         }
     )
 )
