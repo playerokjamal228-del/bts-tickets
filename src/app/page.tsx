@@ -162,7 +162,7 @@ export default function Home() {
             ref={scrollContainerRef}
             className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory px-4 md:px-0 -mx-4 md:mx-0 no-scrollbar items-stretch scroll-smooth"
           >
-            {TOUR_SCHEDULE.map((loc) => (
+            {TOUR_SCHEDULE.map((loc, index) => (
               <div
                 key={loc.id}
                 className="group cursor-pointer min-w-[300px] md:min-w-[350px] flex-shrink-0 snap-center"
@@ -176,6 +176,9 @@ export default function Home() {
                         src={`/cities/${loc.city.toLowerCase()}.png`}
                         alt={`${loc.city} Stadium`}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority={index < 2}
+                        quality={75}
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
