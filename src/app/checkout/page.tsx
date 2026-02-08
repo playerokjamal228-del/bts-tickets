@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/language-context";
 import { Footer } from "@/components/Footer";
 import { trackInitiateCheckout, trackPurchase, trackLead, trackAddPaymentInfo } from "@/lib/pixel-tracking";
+import { CheckoutTimerModal } from "@/components/CheckoutTimerModal";
 
 
 interface BillingInfo {
@@ -58,6 +59,11 @@ export default function CheckoutPage() {
 
     const [mounted, setMounted] = useState(false);
 
+    // Timer State
+    const [showTimerModal, setShowTimerModal] = useState(true);
+    const [timeLeft, setTimeLeft] = useState(600);
+    const [timerActive, setTimerActive] = useState(false);
+
 
     // 3-Step Checkout Flow: 1 = Email, 2 = Details, 3 = Payment
 
@@ -90,6 +96,27 @@ export default function CheckoutPage() {
         }
     }, []);
 
+    // Timer Logic
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (timerActive && timeLeft > 0) {
+            interval = setInterval(() => {
+                setTimeLeft((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [timerActive, timeLeft]);
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handleStartTimer = () => {
+        setShowTimerModal(false);
+        setTimerActive(true);
+    };
 
     // Billing form state
     const [billing, setBilling] = useState<BillingInfo>({
@@ -255,6 +282,8 @@ export default function CheckoutPage() {
 
     return (
         <>
+            <CheckoutTimerModal isOpen={showTimerModal} onStart={handleStartTimer} />
+
             <div className="min-h-screen bg-[#0a0a0a] font-sans pb-20">
 
                 {/* Header - Dark Theme */}
@@ -262,6 +291,10 @@ export default function CheckoutPage() {
                     <Link href="/" className="flex items-center gap-2">
                         <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">BTS Tickets</span>
                     </Link>
+                    <div className="flex items-center gap-2 font-mono font-medium text-white bg-red-600/20 border border-red-500/30 px-4 py-2 rounded-lg">
+                        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                        <span className="text-red-400">{formatTime(timeLeft)}</span>
+                    </div>
                 </div>
 
 
