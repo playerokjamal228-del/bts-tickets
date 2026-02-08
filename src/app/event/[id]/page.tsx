@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         openGraph: {
             title: `BTS Tickets ${event.city} 2026`,
             description: `Join the purple ocean at ${event.stadium}!`,
-            images: [`/cities/${event.city.toLowerCase()}.png`],
+            images: [`/cities/${event.city.toLowerCase()}.jpg`],
         },
         robots: {
             index: false,

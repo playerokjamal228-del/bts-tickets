@@ -173,7 +173,7 @@ export default function Home() {
                     <div className="h-56 relative overflow-hidden">
                       {/* City Image */}
                       <Image
-                        src={`/cities/${loc.city.toLowerCase()}.png`}
+                        src={`/cities/${loc.city.toLowerCase()}.jpg`}
                         alt={`${loc.city} Stadium`}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
