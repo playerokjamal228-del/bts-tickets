@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
+import { Lock, X } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 
 interface CheckoutTimerModalProps {
@@ -11,19 +11,50 @@ interface CheckoutTimerModalProps {
 }
 
 export function CheckoutTimerModal({ onStart, isOpen }: CheckoutTimerModalProps) {
-    const { t } = useLanguage();
-
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-white text-black rounded-2xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px'
+        }}>
+            <div style={{
+                backgroundColor: 'white',
+                color: 'black',
+                padding: '32px',
+                borderRadius: '16px',
+                width: '100%',
+                maxWidth: '420px',
+                position: 'relative',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+            }}>
 
-                {/* Decorative Top Accent */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-600 to-pink-600" />
+                {/* Close Button (Fallback) */}
+                <button
+                    onClick={onStart}
+                    style={{
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '4px'
+                    }}
+                >
+                    <X className="w-6 h-6 text-gray-400 hover:text-gray-600" />
+                </button>
 
-                <div className="flex flex-col items-center text-center space-y-6 pt-4">
-
+                <div className="flex flex-col items-center text-center space-y-6">
                     {/* Icon */}
                     <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-2">
                         <Lock className="w-8 h-8 text-purple-600" />
@@ -42,11 +73,10 @@ export function CheckoutTimerModal({ onStart, isOpen }: CheckoutTimerModalProps)
                     {/* Button */}
                     <Button
                         onClick={onStart}
-                        className="w-full h-12 text-lg font-bold bg-[#6832BC] hover:bg-[#5a2b9e] text-white rounded-xl shadow-lg shadow-purple-900/10 transition-all hover:scale-[1.02]"
+                        className="w-full h-12 text-lg font-bold bg-[#6832BC] hover:bg-[#5a2b9e] text-white rounded-xl shadow-lg shadow-purple-900/10"
                     >
                         Start
                     </Button>
-
                 </div>
             </div>
         </div>
