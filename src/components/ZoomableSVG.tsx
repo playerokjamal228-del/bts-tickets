@@ -25,8 +25,11 @@ export const ZoomableSVG = ({
 }: ZoomableSVGProps) => {
     const [scale, setScale] = useState(initialScale);
     const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false); // Only for cursor styling
+
+    // Use refs for drag logic to avoid re-renders on simple taps (which breaks clicks on Android)
+    const dragStartRef = useRef({ x: 0, y: 0 });
+    const isDraggingRef = useRef(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Track pinch gesture
@@ -60,10 +63,10 @@ export const ZoomableSVG = ({
 
         const handleTouchStart = (e: TouchEvent) => {
             if (e.touches.length === 1) {
-                // Single touch - start drag
+                // Single touch - start drag logic but DON'T re-render yet
                 const touch = e.touches[0];
-                setIsDragging(true);
-                setDragStart({ x: touch.clientX - position.x, y: touch.clientY - position.y });
+                isDraggingRef.current = false;
+                dragStartRef.current = { x: touch.clientX - position.x, y: touch.clientY - position.y };
             } else if (e.touches.length === 2) {
                 // Two touches - start pinch
                 e.preventDefault();
@@ -79,19 +82,26 @@ export const ZoomableSVG = ({
         };
 
         const handleTouchMove = (e: TouchEvent) => {
-            if (e.touches.length === 1 && isDragging) {
+            if (e.touches.length === 1) {
                 // Single touch - drag/pan
                 const touch = e.touches[0];
-                const dx = touch.clientX - dragStart.x;
-                const dy = touch.clientY - dragStart.y;
+                const startX = dragStartRef.current.x;
+                const startY = dragStartRef.current.y;
 
-                // Add threshold to prevent jitter from blocking clicks
-                if (Math.abs(touch.clientX - (dragStart.x + position.x)) > 5 ||
-                    Math.abs(touch.clientY - (dragStart.y + position.y)) > 5) {
-                    setPosition({
-                        x: dx,
-                        y: dy,
-                    });
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+
+                // Threshold check
+                if (!isDraggingRef.current) {
+                    if (Math.abs(touch.clientX - (startX + position.x)) > 5 ||
+                        Math.abs(touch.clientY - (startY + position.y)) > 5) {
+                        isDraggingRef.current = true;
+                        setIsDragging(true); // Now we update state for cursor/style
+                    }
+                }
+
+                if (isDraggingRef.current) {
+                    setPosition({ x: dx, y: dy });
                 }
             } else if (e.touches.length === 2) {
                 // Two touches - pinch to zoom
@@ -110,6 +120,8 @@ export const ZoomableSVG = ({
         };
 
         const handleTouchEnd = () => {
+            // Reset drag refs and state
+            isDraggingRef.current = false;
             setIsDragging(false);
             lastTouchDistanceRef.current = null;
             lastTouchCenterRef.current = null;
@@ -124,23 +136,54 @@ export const ZoomableSVG = ({
             container.removeEventListener('touchmove', handleTouchMove);
             container.removeEventListener('touchend', handleTouchEnd);
         };
-    }, [isDragging, dragStart, position, minScale, maxScale]);
+    }, [position, minScale, maxScale]); // Removed isDragging/dragStart from dependency array as they are now refs/internal
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        setIsDragging(true);
-        setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+        // Same logic for mouse to be consistent
+        isDraggingRef.current = false;
+        dragStartRef.current = { x: e.clientX - position.x, y: e.clientY - position.y };
+        // For mouse, we might want immediate feedback or standard behavior. 
+        // Standard drag behavior usually waits for move too, but let's keep it simple.
+        // We'll mimic the touch logic to ensure clicks work.
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (isDragging) {
-            setPosition({
-                x: e.clientX - dragStart.x,
-                y: e.clientY - dragStart.y,
-            });
+        // Note: Mouse events fire differently, validation check needed
+        // Assuming we track mouse button state via external or global listener if needed, 
+        // but here we just rely on the fact that MouseDown happened.
+        // Wait, handleMouseMove needs to know if button is down. 
+        // Typically we'd use state 'isDragging' for mouse, but we moved to refs.
+
+        // Let's rely on the ref set in MouseDown. 
+        // BUT MouseUp needs to clear it.
+        // And we need to check if buttons are pressed?
+        if (e.buttons === 0) {
+            isDraggingRef.current = false;
+            if (isDragging) setIsDragging(false);
+            return;
+        }
+
+        const startX = dragStartRef.current.x;
+        const startY = dragStartRef.current.y;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if (!isDraggingRef.current) {
+            if (Math.abs(e.clientX - (startX + position.x)) > 5 ||
+                Math.abs(e.clientY - (startY + position.y)) > 5) {
+                isDraggingRef.current = true;
+                setIsDragging(true);
+            }
+        }
+
+        if (isDraggingRef.current) {
+            setPosition({ x: dx, y: dy });
         }
     };
 
     const handleMouseUp = () => {
+        isDraggingRef.current = false;
         setIsDragging(false);
     };
 
