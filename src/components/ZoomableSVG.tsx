@@ -82,10 +82,17 @@ export const ZoomableSVG = ({
             if (e.touches.length === 1 && isDragging) {
                 // Single touch - drag/pan
                 const touch = e.touches[0];
-                setPosition({
-                    x: touch.clientX - dragStart.x,
-                    y: touch.clientY - dragStart.y,
-                });
+                const dx = touch.clientX - dragStart.x;
+                const dy = touch.clientY - dragStart.y;
+
+                // Add threshold to prevent jitter from blocking clicks
+                if (Math.abs(touch.clientX - (dragStart.x + position.x)) > 5 ||
+                    Math.abs(touch.clientY - (dragStart.y + position.y)) > 5) {
+                    setPosition({
+                        x: dx,
+                        y: dy,
+                    });
+                }
             } else if (e.touches.length === 2) {
                 // Two touches - pinch to zoom
                 e.preventDefault();

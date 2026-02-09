@@ -60,7 +60,7 @@ declare global {
 }
 
 // Function to send event to CAPI
-const sendToCapi = async (eventName: string, customData: any = {}, eventId?: string) => {
+const sendToCapi = async (eventName: string, customData: Record<string, unknown> = {}, eventId?: string) => {
     const config = getPixelConfig();
     if (!config.facebookAccessToken || config.facebookAccessToken === "YOUR_FB_ACCESS_TOKEN") return;
     if (!config.facebookPixelId || config.facebookPixelId === "YOUR_FB_PIXEL_ID") return;

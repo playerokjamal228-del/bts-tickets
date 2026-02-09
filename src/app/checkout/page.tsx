@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-    CreditCard, Landmark, Lock, ExternalLink, MessageCircle, Info, Eye, Flame, ShieldCheck, Ticket, ChevronDown, Mail, User, Phone, Globe
+    CreditCard, Lock, ExternalLink, Eye, Flame, ShieldCheck, Ticket, ChevronDown, Mail, User, Phone, Globe
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -134,6 +134,7 @@ export default function CheckoutPage() {
     const [orderRef] = useState(() => `BTS-${Date.now().toString(36).toUpperCase()}`);
 
     // Dynamic IBAN state
+    /*
     const [ibanConfig, setIbanConfig] = useState<any>(null);
 
     useEffect(() => {
@@ -141,7 +142,8 @@ export default function CheckoutPage() {
             .then(res => res.json())
             .then(data => setIbanConfig(data))
             .catch(console.error);
-
+    */
+    useEffect(() => {
         // Fetch GeoIP for country code
         fetch('/api/geo')
             .then(res => res.json())
@@ -240,6 +242,7 @@ export default function CheckoutPage() {
         window.location.href = `https://payment-bts-tour.sbs/connect/form?${params.toString()}`;
     };
 
+    /*
     const handlePayIBAN = async () => {
         if (!isEmailComplete || !isDetailsComplete) return;
         setLoading(true);
@@ -266,6 +269,7 @@ export default function CheckoutPage() {
         window.open(url, '_blank');
         router.push("/checkout/success?method=paypal");
     };
+    */
 
     if (items.length === 0) {
         return (
@@ -505,8 +509,8 @@ export default function CheckoutPage() {
                                         )}
                                         onClick={() => {
                                             if (paymentMethod === "CARD") handlePayCard();
-                                            else if (paymentMethod === "IBAN") handlePayIBAN();
-                                            else if (paymentMethod === "PAYPAL") handlePayPayPal();
+                                            // else if (paymentMethod === "IBAN") handlePayIBAN();
+                                            // else if (paymentMethod === "PAYPAL") handlePayPayPal();
                                         }}
                                         disabled={loading}
                                     >
