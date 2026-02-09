@@ -491,39 +491,12 @@ export default function CheckoutPage() {
                                         </div>
                                     </div>
 
-                                    <div
-                                        onClick={() => setPaymentMethod("IBAN")}
-                                        className={cn("p-4 border rounded-xl cursor-pointer transition-all flex items-center justify-between", paymentMethod === "IBAN" ? "border-purple-500 bg-purple-500/10 ring-1 ring-purple-500" : "border-white/20 hover:border-white/40 bg-white/5")}
-                                    >
-                                        <div className="flex items-center gap-3 text-white">
-                                            <Landmark className="w-5 h-5" />
-                                            <span className="font-bold">Bank Transfer (IBAN)</span>
-                                        </div>
-                                        <Badge icon={Info} text="Manual" color="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30" />
-                                    </div>
-
-                                    <div
-                                        onClick={() => setPaymentMethod("PAYPAL")}
-                                        className={cn("p-4 border rounded-xl cursor-pointer transition-all flex items-center justify-between", paymentMethod === "PAYPAL" ? "border-blue-500 bg-blue-500/10 ring-1 ring-blue-500" : "border-white/20 hover:border-white/40 bg-white/5")}
-                                    >
-                                        <div className="flex items-center gap-3 text-white">
-                                            <MessageCircle className="w-5 h-5 text-blue-400" />
-                                            <span className="font-bold">PayPal</span>
-                                        </div>
-                                        <Badge icon={Info} text="F&F Only" color="bg-blue-500/20 text-blue-400 border border-blue-500/30" />
-                                    </div>
                                 </div>
 
-                                {/* Payment Content */}
+                                {/* IBAN and PayPal options hidden by request */}
+
                                 <div className="mt-6 pt-6 border-t border-white/10">
-                                    {paymentMethod === "CARD" && (
-                                        <p className="text-sm text-gray-400 mb-4">{t.checkout.cardPaymentNote}</p>
-                                    )}
-                                    {paymentMethod === "IBAN" && (
-                                        <div className="bg-yellow-500/10 p-4 rounded-lg border border-yellow-500/20 mb-4">
-                                            <p className="text-yellow-400 text-sm font-medium">{t.checkout.ibanInstantWarning}</p>
-                                        </div>
-                                    )}
+                                    <p className="text-sm text-gray-400 mb-4">{t.checkout.cardPaymentNote}</p>
 
                                     <Button
                                         className={cn(
